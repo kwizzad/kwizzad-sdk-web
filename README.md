@@ -8,12 +8,17 @@ website.
 
 - Get an API key and placement ID(s) from your account manager. Your account manager can also
   provide a test placement ID that always returns an ad for testing purposes.
-- Include the Kwizzad SDK Javascript in your app, either with `npm install --save kwizzad-sdk` or
-  by including this snippet in your `<head>`:
-  ```html
-    <script src='//go.kwizzad.com/kwizzad-web-sdk.min.js' async defer></script>
-  ```
-
+- If you simply want to try around with the SDK, run `npm install; npm start` from the command line
+  and open `http://localhost:8080/` in a web browser, which opens an example publisher web app
+  that integrates Kwizzad.
+- In you app, include the Kwizzad SDK Javascript in your app like in `index.html`: Append
+  `<script src="kwizzad.js" async defer></script>` to the end of your HTML `<body>` tag, and have a
+  look at the `<script>` for an example how to make an ad request with Kwizzad. For details, see
+  below.  
+- Ensure you load the web page over HTTP and not directly from the file system. When serving the
+  page via a file:// URL, restrictions apply. On Mac, you can run a HTTP server from the root
+  directory for testing with `python -m SimpleHTTPServer 8000`, then open
+  [http://localhost:8000/public/](http://localhost:8000/public/).
 
 ### Requesting and presenting ads
 
