@@ -11,7 +11,7 @@ const config = {
   context: __dirname,
 
   entry: [
-    'babel-polyfill',
+    // 'babel-polyfill',
     './app/kwizzad.jsx',
   ],
 
