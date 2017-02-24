@@ -1,0 +1,80 @@
+import React, { Component } from 'react';
+import parseQueryParams from 'app/lib/query-params';
+import ModalDialog from './modal-dialog';
+import Iframe from './iframe';
+
+import './kwizzad-dialog.styl';
+
+
+export default class KwizzadDialog extends Component {
+  constructor(props) {
+    super(props);
+    // Simple replacement for ReactRouter etc. -- we don't need pushState support, as our
+    // URL does not change like in other single page applications. Path + Query parameters can
+    // optionally be given behind a hash character (#), e.g. like this:
+    // `http://host/page.html#/path/goes/here?foo=bar`
+
+    const pathRegexp = /^#?\/?([^\/]+)\/([^\/\?]+)/;
+    const { hash, pathname } = window.location;
+    const match = hash ? hash.match(pathRegexp) : pathname.match(pathRegexp);
+    const hashQueryParamsString = (hash && (hash.match(/\?.*$/) || [])[0]) || '';
+    const queryParamsString = hash ? hashQueryParamsString : location.search;
+
+    this.state = {
+      queryParams: parseQueryParams(queryParamsString),
+      isVisible: false,
+    };
+
+    if (match) {
+      const [, resourceType, resourceId] = match;
+      this.state[resourceType] = resourceId;
+    }
+  }
+
+  requestAd(options) {
+    const requestOptions = {
+      onAdResponse: (response) => {
+        this.setState({ src: response.url });
+      },
+      onShow: () => {
+        if (typeof this.props.onShow === 'function') {
+          this.props.onShow();
+        }
+        this.setState({ isVisible: true });
+      },
+    };
+    this.props.placement.requestAd(Object.assign(requestOptions, options));
+    return this;
+  }
+
+  render() {
+    return (<ModalDialog
+      className="iframe"
+      isRenderedIfInvisible
+      onClose={() => {
+        this.setState({ isVisible: false });
+        if (typeof this.props.onClose === 'function') { this.props.onClose(); }
+      }}
+      isVisible={Boolean(this.state.src) && this.state.isVisible}
+    >
+      <Iframe {...this.state} />
+    </ModalDialog>);
+  }
+}
+
+
+KwizzadDialog.propTypes = {
+  user: React.PropTypes.shape({
+    id: React.PropTypes.string.isRequired,
+    gender: React.PropTypes.string.isRequired,
+    name: React.PropTypes.string.isRequired,
+    facebookUserId: React.PropTypes.string.isRequired,
+  }),
+  placement: React.PropTypes.shape({
+    requestAd: React.PropTypes.func.isRequired,
+  }).isRequired,
+  apiKey: React.PropTypes.string.isRequired,
+  placementId: React.PropTypes.string.isRequired,
+  onShow: React.PropTypes.func,
+  onClose: React.PropTypes.func,
+};

@@ -1,0 +1,31 @@
+.kwizzad-modal-dialog-iframe
+  .kwizzad-modal-dialog-content
+    position: relative
+    width: 90%
+    height: 90%
+    @media (min-width: 1200px)
+      max-width: 1200px
+      max-height: 768px
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 30px rgba(0, 0, 0, 0.15)
+    iframe
+      width: 100%
+      height: 100%
+
+
+// Fade modal dialog background to transparent black
+.kwizzad-modal-dialog-iframe
+  .kwizzad-modal-dialog-content
+    transition: transform 0.3s ease-out
+    transform: scale3d(0.9, 0.9, 0.9);
+  .kwizzad-modal-dialog-fullscreen-overlay
+    transition: background-color 4s ease-out, transform 1s ease-out
+    background-color: rgba(0, 0, 0, 0)
+    transform: scale3d(0.9, 0.9, 0.9);
+
+.kwizzad-container-show
+  .kwizzad-modal-dialog-content
+    transform: scale3d(1, 1, 1);
+  .kwizzad-modal-dialog-iframe
+    .kwizzad-modal-dialog-fullscreen-overlay
+      background-color: rgba(0, 0, 0, 0.5)
+      transform: scale3d(1, 1, 1);

@@ -1,0 +1,12 @@
+node_modules
+**/.DS_Store
+version.html
+npm-debug.log
+bundle.js
+bundle.js.map
+credential.js
+deploy/feature.js
+deploy/qa.js
+deploy/live.js
+deploy/develop.js
+versions

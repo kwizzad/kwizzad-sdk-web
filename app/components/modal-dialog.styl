@@ -1,0 +1,70 @@
+@import '../style/colors'
+@import '../style/units'
+
+.kwizzad-modal-dialog,
+.kwizzad-modal-dialog-fullscreen-overlay,
+.kwizzad-modal-dialog-inner
+  position: fixed
+  top: 0
+  left: 0
+  right: 0
+  bottom: 0
+  display: flex
+  flex-direction: column
+  align-items: center
+  justify-content: center
+  transition: bottom 0.3s ease-out
+
+  // This is a hacky workaround because the Android SDK does not handle the keyboard-open case
+  // correctly yet.
+  .is-android .kwizzad-modal-dialog-inner.with-shown-keyboard
+    bottom: 48%
+
+button.kwizzad-close-dialog
+  border: none
+  outline: none
+  position: absolute
+  left: 0
+  top: 0
+  font-size: 30px
+  line-height: 100%
+  width: 50px
+  height: 50px
+  cursor: pointer
+  svg
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  &:hover, &:active
+    background-color: lighten(color-red, 10%)
+
+.kwizzad-modal-dialog-fullscreen-overlay
+  background-color: rgba(0, 0, 0, 0.93)
+
+.kwizzad-modal-dialog-default
+  .kwizzad-modal-dialog-content
+    position: relative
+    box-sizing: border-box
+    overflow: scroll
+    max-width: 40em
+    max-height: 100%
+    padding: 3em 1em 2em 1em
+    color: #333
+    background-color: white
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5)
+    h1
+      margin: .5em 0
+      font-size: 2em
+    button
+      border: none
+      outline: none
+      border-radius: 0
+      background-color: color-violet
+      &:hover, &:active
+        background-color: lighten(color-violet, 10%)
+        default-font()
+        font-size: 1em
+        color: white
+      &.kwizzad-close-dialog
+        background-color: color-red
