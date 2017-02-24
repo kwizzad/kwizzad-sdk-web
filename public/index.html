@@ -11,6 +11,8 @@
       // This function is called back by Kwizzad as soon as it is loaded completely.
       window.onKwizzadLoaded = function(Kwizzad) {
         var lastShowAdFunction = null;
+        var button = document.getElementById('kwizzad-button');
+
         // Request and preload an ad. If you want your page to become responsive faster, you can
         // choose to call `render`/`requestAd` later, when your page's main content is loaded
         // completely.
@@ -28,7 +30,6 @@
           },
 
           onAdLoading: function() {
-            var button = document.getElementById('kwizzad-button');
             button.innerHTML = "Loading ad…";
             button.disabled = true;
           },
@@ -36,7 +37,6 @@
           // Kwizzad SDK calls this back when there is an ad for your request.
           onAdAvailable: function(showAd, potentialRewards) {
             // potentialRewards is an array of reward objects that the user can earn.
-            var button = document.getElementById('kwizzad-button');
             button.innerHTML = potentialRewards.incentiveText;
             button.disabled = false;
             if (lastShowAdFunction) {
@@ -49,6 +49,8 @@
           // Called back when the user played the campaign or dismissed the ad.
           onAdDismissed: function() {
             console.log('Kwizzad was dismissed.');
+            button.innerHTML = 'Waiting for next quiz...';
+            button.disabled = true;
           },
 
           // Called back with reward information that the user has to confirm.
@@ -88,13 +90,13 @@
           // Called back if no ad is available for your request. Note that Kwizzad
           // automatically retries to fetch ads in the background and calls `onAdAvailable` then.
           onNoFill: function() {
-            document.getElementById('kwizzad-button').innerHTML = 'No quiz available.';
+            button.innerHTML = 'No quiz available.';
           },
 
           // Called back if the request could not be sent or the server responded with an error.
           onError: function(error) {
-            document.getElementById('kwizzad-button').innerHTML = 'No quiz available.';
-            console.log('Kwizzad: Ad request error:', error);
+            button.innerHTML = 'No quiz available.';
+            console.log('Kwizzad error:', error);
           }
         });
       };
