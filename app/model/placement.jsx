@@ -20,6 +20,11 @@ const AllowedAdStates = [
   'DISMISSED',
 ];
 
+const StatesThatAllowRequests = [
+  'INITIAL',
+  'NOFILL',
+  'DISMISSED',
+];
 
 export default class Placement {
   constructor(options = {}) {
@@ -62,6 +67,12 @@ export default class Placement {
 
 
   requestAd(options) {
+    clearTimeout(this.nextAdRequestTimeout);
+    if (!StatesThatAllowRequests.includes(this.state)) {
+      console.log('Kwizzad: Cannot make a request in', this.state, 'state.');
+      return;
+    }
+
     this.setState('REQUESTING_AD');
 
     const { onError, user } = options;
@@ -103,6 +114,13 @@ export default class Placement {
   }
 
 
+  requestAnotherAdAfter(milliseconds) {
+    const options = this.lastAdRequestOptions;
+    clearTimeout(this.nextAdRequestTimeout);
+    this.nextAdRequestTimeout = setTimeout(() => this.requestAd(options), milliseconds);
+  }
+
+
   confirmTransactions(transactions) {
     const confirmationEvents = transactions.map(transaction => ({
       type: 'transactionConfirmed',
@@ -121,9 +139,8 @@ export default class Placement {
 
 
   isValidAdResponse(response) {
-    return !['adType', 'expiry', 'url', 'placementId', 'adId'].find(propertyName =>
-      !(typeof response[propertyName] === 'string')
-    );
+    const propertyNames = ['adType', 'expiry', 'url', 'placementId', 'adId'];
+    return propertyNames.every(propertyName => typeof response[propertyName] === 'string');
   }
 
 
@@ -197,7 +214,9 @@ export default class Placement {
       callback: (error, responses) => {
         if (error) {
           console.log('Could not send dismissedAd event.', error, responses);
+          return;
         }
+        this.requestAnotherAdAfter(1000);
         if (responses instanceof Array) {
           responses.forEach(response => this.handleResponse(response));
         }
