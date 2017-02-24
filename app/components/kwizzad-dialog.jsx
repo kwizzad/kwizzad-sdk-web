@@ -37,13 +37,12 @@ export default class KwizzadDialog extends Component {
         this.setState({ src: response.url });
       },
       onShow: () => {
-        if (typeof this.props.onShow === 'function') {
-          this.props.onShow();
-        }
+        if (typeof this.props.onShow === 'function') { this.props.onShow(); }
         this.setState({ isVisible: true });
       },
     };
     this.props.placement.requestAd(Object.assign(requestOptions, options));
+    this.onAdDismissed = options.onAdDismissed;
     return this;
   }
 
@@ -53,6 +52,11 @@ export default class KwizzadDialog extends Component {
       isRenderedIfInvisible
       onClose={() => {
         this.setState({ isVisible: false });
+        this.props.placement.dismissAd();
+        if (typeof this.onAdDismissed === 'function') {
+          this.onAdDismissed();
+          delete this.onAdDismissed;
+        }
         if (typeof this.props.onClose === 'function') { this.props.onClose(); }
       }}
       isVisible={Boolean(this.state.src) && this.state.isVisible}
@@ -72,6 +76,7 @@ KwizzadDialog.propTypes = {
   }),
   placement: React.PropTypes.shape({
     requestAd: React.PropTypes.func.isRequired,
+    dismissAd: React.PropTypes.func.isRequired,
   }).isRequired,
   apiKey: React.PropTypes.string.isRequired,
   placementId: React.PropTypes.string.isRequired,

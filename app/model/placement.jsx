@@ -3,6 +3,7 @@ import requestJSON from 'app/lib/request';
 import defaults from 'app/lib/defaults';
 import getInstallId from './install-id';
 import Reward, { incentiveTextForRewards } from './reward';
+import { transactionsFromJSON } from './transaction';
 
 
 const AllowedAdStates = [
@@ -63,22 +64,26 @@ export default class Placement {
   requestAd(options) {
     this.setState('REQUESTING_AD');
 
-    const handleResponse = this.handleResponse.bind(this);
     const { onError, user } = options;
+
+    if (typeof options.onAdLoading === 'function') {
+      options.onAdLoading(this);
+    }
+
+    this.lastAdRequestOptions = options;
 
     this.makeAPIRequest({
       data: [{
         type: 'adRequest',
         placementId: this.options.placementId,
         deviceInformation: navigator.userAgent,
-        adId: this.adId,
         userData: {
-          sdkVersion: PACKAGE_VERSION,
-          PlatformType: 'Web',
           apiVersion: '1.0',
-          gender: user && user.gender && user.gender.toUpperCase(),
+          PlatformType: 'Web',
           userId: user && user.id,
           userName: user && user.name,
+          sdkVersion: PACKAGE_VERSION,
+          gender: user && user.gender && user.gender.toUpperCase(),
         },
       }],
       callback: (error, responses) => {
@@ -88,10 +93,27 @@ export default class Placement {
           return;
         }
         if (responses instanceof Array) {
-          responses.forEach(response => handleResponse.call(this, response, options));
+          responses.forEach(response => this.handleResponse(response, options));
         } else {
           this.setState('NOFILL');
           onError(new Error('Unexpected ad response format'));
+        }
+      },
+    });
+  }
+
+
+  confirmTransactions(transactions) {
+    const confirmationEvents = transactions.map(transaction => ({
+      type: 'transactionConfirmed',
+      adId: transaction.adId,
+      transactionId: transaction.transactionId,
+    }));
+    this.makeAPIRequest({
+      data: confirmationEvents,
+      callback: (error, responses) => {
+        if (error) {
+          console.log('Could not confirm transactions.', error, responses);
         }
       },
     });
@@ -115,48 +137,30 @@ export default class Placement {
   }
 
 
+  handleOpenTransactions(response, options = this.lastAdRequestOptions) {
+    const confirmFunction = this.confirmTransactions.bind(this);
+    const transactions = transactionsFromJSON(response.transactions, confirmFunction);
+    if (!transactions) {
+      return;
+    }
+    if (options && typeof options.onOpenTransactions === 'function') {
+      options.onOpenTransactions(transactions);
+    }
+  }
+
+
   handleResponse(response, options) {
     switch (response.type) {
       case 'adResponse': this.handleAdResponse(response, options); break;
-      case 'openTransactions': break;
+      case 'openTransactions': this.handleOpenTransactions(response, options); break;
       default: console.log('Unknown response type', response.type); break;
     }
-
-    // [{
-    //     "adType": "adFullscreen",
-    //     "expiry": "2017-02-07T12:31:13Z",
-    //     "url": "https://kadev.kwizzad.com/labs/trackingtoken/1LTExMDYxNDAwMw?disableAdStartedEvent=1",
-    //     "reward": {
-    //         "type": "callback",
-    //         "amount": 30000000,
-    //         "currency": "smiles"
-    //     },
-    //     "rewards": [{
-    //       "amount": 70,
-    //       "currency": "loot",
-    //       "type": "callback"
-    //     },
-    //     {
-    //       "amount": 10,
-    //       "currency": "loot",
-    //       "type": "call2ActionStarted"
-    //     },
-    //     {
-    //       "amount": 10,
-    //       "currency": "loot",
-    //       "type": "goalReached"
-    //     }],
-    //     "closeButtonVisibility": "BEFORE_CALL2ACTION",
-    //     "kometArchiveUrl": "https://labs.tvsmiles.tv/versions/2016-11-24-11.43.32.077-09786744812c405326f0ffe337247723c0bb2c30.tar.gz",
-    //     "placementId": "tvsa",
-    //     "type": "adResponse",
-    //     "adId": "1LTExMDYxNDAwMw"
-    // }];
   }
 
 
   loadAd(response, options) {
     this.setState('LOADING_AD');
+    this.adId = response.adId;
     options.onAdResponse(response, options);
 
     const potentialRewards = response.rewards.map(reward => new Reward(reward));
@@ -177,19 +181,29 @@ export default class Placement {
         options.onShow();
       }
     } else {
-      this.setState('DISMISSED');
-      if (typeof options.onDismiss === 'function') {
-        options.onDismiss();
-      }
+      this.dismissAd();
       console.log('Ad expired, dismissed.');
     }
   }
 
 
-  // TODO: Implement this
-  // isGoalReached(url) {
-  //
-  // }
+  dismissAd() {
+    this.setState('DISMISSED');
+    this.makeAPIRequest({
+      data: [{
+        type: 'adDismissed',
+        adId: this.adId,
+      }],
+      callback: (error, responses) => {
+        if (error) {
+          console.log('Could not send dismissedAd event.', error, responses);
+        }
+        if (responses instanceof Array) {
+          responses.forEach(response => this.handleResponse(response));
+        }
+      },
+    });
+  }
 
 
   shouldCloseButtonBeVisible() {

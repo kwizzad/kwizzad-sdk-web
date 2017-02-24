@@ -1,4 +1,5 @@
 import React from 'react';
+import pick from 'lodash/pick';
 import ReactDOM from 'react-dom';
 import Placement from './model/placement';
 import KwizzadDialog from './components/kwizzad-dialog';
@@ -19,10 +20,11 @@ __webpack_public_path__ = __webpack_public_path__ || '/public/';
 export default class Kwizzad {
   constructor(options) {
     this.options = options;
-    this.options.placement = new Placement({
-      placementId: this.options.placementId,
-      apiKey: this.options.apiKey,
-    });
+    this.options.placement = new Placement(pick(options,
+      'placementId',
+      'apiKey',
+      'baseUrl'
+    ));
     setLocale('de');
   }
 
@@ -38,17 +40,23 @@ export default class Kwizzad {
     bodyElement.appendChild(this.containerElement);
 
     const props = this.options;
+
     ReactDOM.render(
       <KwizzadDialog
         {...props}
+
         ref={ref => { this.dialog = ref; }}
+
         onShow={() => {
           this.containerElement.classList.add('kwizzad-container-visible');
           setTimeout(() => this.containerElement.classList.add('kwizzad-container-show'), 200);
         }}
+
         onClose={() => {
           this.containerElement.classList.remove('kwizzad-container-show');
-          setTimeout(() => this.containerElement.classList.remove('kwizzad-container-visible'), 1000);
+          setTimeout(() => {
+            this.containerElement.classList.remove('kwizzad-container-visible');
+          }, 1000);
         }}
       />,
       this.containerElement

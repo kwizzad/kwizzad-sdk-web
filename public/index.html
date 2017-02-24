@@ -5,15 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="index.css">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400" rel="stylesheet">
+    <script src="index.js" charset="utf-8"></script>
 
     <script>
       // This function is called back by Kwizzad as soon as it is loaded completely.
       window.onKwizzadLoaded = function(Kwizzad) {
         var lastShowAdFunction = null;
-        // Request an ad when the page is loaded
+        // Request and preload an ad. If you want your page to become responsive faster, you can
+        // choose to call `render`/`requestAd` later, when your page's main content is loaded
+        // completely.
         var kwizzad = new Kwizzad({
-          apiKey: 'b81e71a86cf1314d249791138d642e6c4bd08240f21dd31811dc873df5d7469d',
-          placementId: 'tvsa'
+          apiKey: 'b7220655bd54399edac9d9c6962f521d7c1cfed0f168e908a37ce4b2b6c7bcd2',
+          placementId: 'tvsb',
+          baseUrl: 'https://labs.tvsmiles.tv/api/sdk/',
         }).render().requestAd({
           // By supplying user data, your users can get better targeted ads. Each attribute is optional.
           user: {
@@ -23,11 +27,18 @@
             facebookUserId: '777'    // if your users log in over Facebook
           },
 
+          onAdLoading: function() {
+            var button = document.getElementById('kwizzad-button');
+            button.innerHTML = "Loading ad…";
+            button.disabled = true;
+          },
+
           // Kwizzad SDK calls this back when there is an ad for your request.
           onAdAvailable: function(showAd, potentialRewards) {
             // potentialRewards is an array of reward objects that the user can earn.
             var button = document.getElementById('kwizzad-button');
             button.innerHTML = potentialRewards.incentiveText;
+            button.disabled = false;
             if (lastShowAdFunction) {
               button.removeEventListener('click', lastShowAdFunction);
             }
@@ -36,33 +47,53 @@
           },
 
           // Called back when the user played the campaign or dismissed the ad.
-          onAdDismissed: function(pendingTransactions) {
-            // You should show a UI that displays all pending transactions for the user.
-            // Each transaction contains one or more rewards. The server will send the same
-            // transactions again until your code confirms them by calling their `confirm` method,
-            // like an inbox.
-            pendingTransactions.forEach(function (transaction) {
-              // Feel free to design a dialog that fits your UX and that feels rewarding!
-              // Also available here:
+          onAdDismissed: function() {
+            console.log('Kwizzad was dismissed.');
+          },
+
+          // Called back with reward information that the user has to confirm.
+          onOpenTransactions: function(openTransactions) {
+            // Here you should show a rewarding UI that displays all pending transactions.
+
+            // Each transaction in `openTransactions` contains one or more reward objects.
+            // The server will send the same transactions again until your code confirms them by
+            // calling their `confirm` method, like an inbox.
+
+            // It's a good idea to show a summary of all open transactions so the user can confirm
+            // all at once, but it's up to you if you want to show a single notification for each
+            // transaction.
+
+            if (confirm(openTransactions.summarizedRewardConfirmationText)) {
+              openTransactions.confirmAll();
+            }
+
+            // Optional alternative flow for showing/confirming each single transaction:
+
+            // openTransactions.forEach(function (transaction) {
+              // Available here:
+              // - transaction.rewardConfirmationText()
               // - transaction.reward.amount
               // - transaction.reward.maxAmount
               // - transaction.reward.currency
+              // - transaction.reward.type
               // - transaction.reward.valueDescription
               // - transaction.reward.debugValueDescription
-              if (confirm(transaction.rewardConfirmationText())) {
+              // if (confirm(transaction.rewardConfirmationText())) {
                 // Removes the transaction from the inbox and triggers payout
-                transaction.confirm();
-              }
-            });
+                // transaction.confirm();
+              // }
+            // });
           },
 
-          // Called back if no ad is available for your request
+          // Called back if no ad is available for your request. Note that Kwizzad
+          // automatically retries to fetch ads in the background and calls `onAdAvailable` then.
           onNoFill: function() {
-            console.log('Kwizzad: No ad available.');
+            document.getElementById('kwizzad-button').innerHTML = 'No quiz available.';
           },
 
           // Called back if the request could not be sent or the server responded with an error.
           onError: function(error) {
+            document.getElementById('kwizzad-button').innerHTML = 'No quiz available.';
             console.log('Kwizzad: Ad request error:', error);
           }
         });
@@ -73,12 +104,10 @@
   <body>
     <header>
       <h1>Kwizzad Web SDK Demo</h1>
-      <img id='kwizzad-logo' src='icons/icon-512.png'>
+      <a href='https://kwizzad.com/'><img id='kwizzad-logo' src='icons/icon-512.png'></a>
     </header>
 
-    <button id='kwizzad-button'>
-      Requesting ad…
-    </button>
+    <button id='kwizzad-button' disabled>Initializing…</button>
 
     <script src="public/kwizzad.js" async defer></script>
   </body>

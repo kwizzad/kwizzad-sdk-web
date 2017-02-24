@@ -9,6 +9,9 @@ export const translations = {
       withLimit: 'up to {reward}',
       incentiveText: 'Earn {potentialTotalReward} with a quiz!',
     },
+    transaction: {
+      confirmationText: 'Congratulations, you earned {oneOrMoreRewards}!',
+    },
     enum: {
       two: '{first} and {second}',
       moreThanTwo: '{commaSeparated}, and {last}',
@@ -18,6 +21,9 @@ export const translations = {
     reward: {
       withLimit: 'bis zu {reward}',
       incentiveText: 'Verdiene {potentialTotalReward} mit einem Quiz!',
+    },
+    transaction: {
+      confirmationText: 'Herzlichen Glückwunsch zu {oneOrMoreRewards}!',
     },
     enum: {
       two: '{first} und {second}',
