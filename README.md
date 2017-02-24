@@ -14,72 +14,35 @@ website.
     <script src='//go.kwizzad.com/kwizzad-web-sdk.min.js' async defer></script>
   ```
 
+
 ### Requesting and presenting ads
 
 We recommend you request an ad from Kwizzad right when your page has finished loading.
 
 When an ad is available, you get a callback from the SDK with a method to actually show the ad,
-and with potential rewards that your users can get by playing the ad. You can incentivize your
-users to open the ad with this potential reward information (for example with a
-button: 'Click here to earn 10,000 coins!').
+and with potential rewards that your users can get by playing the ad.
 
-On dismissal, you get an information about if/how the user got a reward. You can then present this
-information to your user.
+You can incentivize your users to open the ad with this potential reward information (for example
+with a button: 'Click here to earn up to 10,000 coins!'). The SDK provides you a button caption you
+can use.
 
-Here is an example implementation:
+If you want to customize the look & feel of the UI element that opens an ad (for example using
+graphics or even animation), the SDK also provides your app with all necessary information (reward
+amount, maximal amount, currency and reward type -- users can get rewards for different steps of
+the experience).
 
-```javascript
-// For NPM / ES6 modules: import Kwizzad from 'kwizzad-sdk';
+On dismissal, you get an information about if/how the user got pending transactions for rewards.
+You can then display this information to your user--either summarized or with a dialog for each
+single pending reward. As soon as your app confirms a transaction, its reward will be paid out.
 
-window.kwizzadLoaded = function(Kwizzad) {
-  // Request an ad when the page is loaded
-  var kwizzad = new Kwizzad({ apiKey: 'YOUR_API_KEY' });
-  kwizzad.requestAd({
-    // By supplying user data, your users can get better targeted ads. Each attribute is optional.
-    user: {
-      id: '12345', // Unique ID that identifies the user inside your app
-      gender: 'female', // 'male', 'female' or null
-      name: 'Stefanie Müller', // user realname inside your app, if existing
-      facebookUserId: '1234abc' // if your users log in over Facebook, you can use this ID.
-    },
+Transactions work like an inbox, so you might transactions again (asynchronously) until you confirm
+them.
 
-    placementId: 'YOUR_PLACEMENT_ID', // get this ID from your account manager
 
-    // Kwizzad SDK calls this back when there is an ad for your request.
-    onAdAvailable: function(showAd, potentialRewards) {
-      // potentialRewards is an array of reward objects that the user can earn.
-      // See below for the detailed structure.
-      console.log('Potential rewards:', potentialRewards);
-      showAd(); // displays the ad. You can choose when to call this.
-    },
+### Example implementation
 
-    // A function that Kwizzad can call back when the user played the campaign or dismissed the ad.
-    onAdDismissed: function(pendingTransactions) {
-      // You should show a UI that displays all pending transactions for the user.
-      // Each transaction contains one or more rewards. The server will send the same
-      // transactions again until your code confirms them by calling their `confirm` method,
-      // like an inbox.
-      pendingTransactions.forEach(function (transaction) {
-        // Feel free to design a dialog that fits your UX and that feels rewarding!
-        // Also available here:
-        // - transaction.reward.amount
-        // - transaction.reward.maxAmount
-        // - transaction.reward.currency
-        // - transaction.reward.humanDescription
-        if (confirm(transaction.rewardConfirmationText())) {
-          // Removes the transaction from the inbox and triggers payout
-          transaction.confirm();
-        }
-      });
-    },
-
-    // If no ad is available for your request, you get this callback.
-    onNoFill: function() {
-      console.log('No ad available.');
-    },
-  });
-});
-```
+Have a look at [`index.html`](./public/index.html), which demonstrates how to integrate Kwizzad ads
+into your website.
 
 
 ## For developers: contribution guidelines
