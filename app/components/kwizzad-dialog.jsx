@@ -55,7 +55,6 @@ export default class KwizzadDialog extends Component {
         this.props.placement.dismissAd();
         if (typeof this.onAdDismissed === 'function') {
           this.onAdDismissed();
-          delete this.onAdDismissed;
         }
         if (typeof this.props.onClose === 'function') { this.props.onClose(); }
       }}
