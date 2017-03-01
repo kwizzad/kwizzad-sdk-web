@@ -11,7 +11,7 @@ website.
 - If you simply want to try around with the SDK, run `npm install; npm start` from the command line
   and open `http://localhost:8080/` in a web browser, which opens an example publisher web app
   that integrates Kwizzad.
-- In you app, include the Kwizzad SDK Javascript in your app like in `index.html`: Append
+- In your app, include the Kwizzad SDK Javascript in your app like in `index.html`: Append
   `<script src="kwizzad.js" async defer></script>` to the end of your HTML `<body>` tag, and have a
   look at the `<script>` for an example how to make an ad request with Kwizzad. For details, see
   below.  
