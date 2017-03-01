@@ -152,6 +152,7 @@ export default class Placement {
     if (!this.isValidAdResponse(response)) {
       console.log('Ad response has unknown/invalid format.', JSON.stringify(response));
       this.setState('NOFILL');
+      return;
     }
     this.loadAd(response, options);
   }
@@ -169,10 +170,26 @@ export default class Placement {
   }
 
 
+  handleNoFillResponse(response, options) {
+    this.setState('NOFILL');
+    if (options && typeof options.onNoFill === 'function') {
+      options.onNoFill(this);
+    }
+    if (response.retryAfter) {
+      const retryDate = new Date(response.retryAfter);
+      const milliseconds = +retryDate - new Date();
+      if (milliseconds > 0) {
+        this.requestAnotherAdAfter(milliseconds);
+      }
+    }
+  }
+
+
   handleResponse(response, options) {
     switch (response.type) {
       case 'adResponse': this.handleAdResponse(response, options); break;
       case 'openTransactions': this.handleOpenTransactions(response, options); break;
+      case 'adNoFill': this.handleNoFillResponse(response, options); break;
       default: console.log('Unknown response type', response.type); break;
     }
   }
