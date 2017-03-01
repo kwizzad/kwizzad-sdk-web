@@ -100,6 +100,7 @@ export default class Placement {
           userName: user && user.name,
           sdkVersion: PACKAGE_VERSION,
           gender: user && user.gender && user.gender.toUpperCase(),
+          facebookUserId: user && user.facebookUserId,
         },
       }],
       callback: (error, responses) => {
