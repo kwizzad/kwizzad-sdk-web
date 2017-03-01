@@ -222,7 +222,8 @@ export default class Placement {
         options.onShow();
       }
     } else {
-      this.dismissAd();
+      this.setState('DISMISSED');
+      this.requestAnotherAdAfter(1000);
       console.log('Ad expired, dismissed.');
     }
   }
