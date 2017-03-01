@@ -10,7 +10,7 @@ export default class Transaction {
         this.reward = new Reward(this.reward);
       }
     }
-    this.confirm = () => confirmFunction(this);
+    this.confirm = () => confirmFunction([this]);
   }
 
   rewardConfirmationText() {
