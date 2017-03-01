@@ -15,13 +15,13 @@ export default class Reward {
   }
 
   valueDescription() {
-    if (this.amount) {
-      return `${this.amount} ${this.currency}`;
-    } else if (this.maxAmount) {
+    if (this.maxAmount && this.maxAmount > this.amount) {
       return t(
         'reward.withLimit',
         { reward: `${this.maxAmount} ${this.currency}` }
       );
+    } else if (this.amount) {
+      return `${this.amount} ${this.currency}`;
     }
     return '';
   }
@@ -56,7 +56,8 @@ function summarize(rewards) {
   const rewardsByCurrency = groupBy(rewards, reward => reward.currency);
   return Object.keys(rewardsByCurrency).map(currency => {
     const amount = sum(rewardsByCurrency[currency].map(reward => reward.amount));
-    const reward = new Reward({ currency, amount });
+    const maxAmount = sum(rewardsByCurrency[currency].map(reward => reward.maxAmount));
+    const reward = new Reward({ currency, amount, maxAmount });
     return reward;
   });
 }
