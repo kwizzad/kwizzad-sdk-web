@@ -10,3 +10,4 @@ deploy/qa.js
 deploy/live.js
 deploy/develop.js
 versions
+coverage

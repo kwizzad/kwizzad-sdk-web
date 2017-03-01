@@ -43,5 +43,5 @@ ModalDialog.propTypes = {
   isKeyboardShown: React.PropTypes.bool,
   isRenderedIfInvisible: React.PropTypes.bool,
   closeButtonElement: React.PropTypes.element,
-  children: React.PropTypes.node
+  children: React.PropTypes.node,
 };

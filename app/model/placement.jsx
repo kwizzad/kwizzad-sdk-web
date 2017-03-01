@@ -43,6 +43,10 @@ export default class Placement {
       throw new Error('Please supply a valid API key.');
     }
 
+    if (typeof this.options.placementId !== 'string') {
+      throw new Error('Please supply a valid placement ID.');
+    }
+
     this.state = 'INITIAL';
   }
 
@@ -51,18 +55,19 @@ export default class Placement {
     if (!AllowedAdStates.includes(newState)) {
       throw new Error('Invalid placement state');
     }
+    console.log('Placement going from', this.state, '->', newState);
     this.state = newState;
     if (typeof this.options.onStateChange === 'function') {
       this.options.onStateChange(this, newState);
     }
-    console.log('Placement now in state', newState);
   }
 
 
   makeAPIRequest(options) {
-    const installId = getInstallId();
-    const url = `${this.options.baseUrl}${this.options.apiKey}/${installId}`;
-    requestJSON(Object.assign({ url, method: 'POST' }, options));
+    const requestFunction = this.options.requestFunction || requestJSON;
+    const installId = this.options.installId || getInstallId();
+    const url = `${this.options.baseUrl.replace(/\/?/, '')}/${this.options.apiKey}/${installId}`;
+    requestFunction(Object.assign({ url, method: 'POST' }, options));
   }
 
 
@@ -98,17 +103,14 @@ export default class Placement {
         },
       }],
       callback: (error, responses) => {
-        if (error) {
+        if (error || !(responses instanceof Array)) {
           this.setState('NOFILL');
-          onError(error);
+          if (typeof onError === 'function') {
+            onError(error || new Error('Unexpected ad response format'));
+          }
           return;
         }
-        if (responses instanceof Array) {
-          responses.forEach(response => this.handleResponse(response, options));
-        } else {
-          this.setState('NOFILL');
-          onError(new Error('Unexpected ad response format'));
-        }
+        responses.forEach(response => this.handleResponse(response, options));
       },
     });
   }
@@ -139,7 +141,7 @@ export default class Placement {
 
 
   isValidAdResponse(response) {
-    const propertyNames = ['adType', 'expiry', 'url', 'placementId', 'adId'];
+    const propertyNames = ['url', 'placementId', 'adId'];
     return propertyNames.every(propertyName => typeof response[propertyName] === 'string');
   }
 
@@ -147,7 +149,7 @@ export default class Placement {
   handleAdResponse(response, options) {
     this.lastAdResponse = response;
     if (!this.isValidAdResponse(response)) {
-      console.log('Ad response has unknown/invalid format.');
+      console.log('Ad response has unknown/invalid format.', JSON.stringify(response));
       this.setState('NOFILL');
     }
     this.loadAd(response, options);
@@ -178,13 +180,17 @@ export default class Placement {
   loadAd(response, options) {
     this.setState('LOADING_AD');
     this.adId = response.adId;
-    options.onAdResponse(response, options);
+    if (typeof options.onAdResponse === 'function') {
+      options.onAdResponse(response, options);
+    }
 
-    const potentialRewards = response.rewards.map(reward => new Reward(reward));
+    const potentialRewards = (response.rewards || []).map(reward => new Reward(reward));
     potentialRewards.incentiveText = incentiveTextForRewards(potentialRewards);
     const showAd = () => this.showAd(response, options);
     this.setState('AD_READY');
-    options.onAdAvailable(showAd, potentialRewards);
+    if (typeof options.onAdAvailable === 'function') {
+      options.onAdAvailable(showAd, potentialRewards);
+    }
   }
 
 
