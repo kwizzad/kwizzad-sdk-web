@@ -1,4 +1,5 @@
 import expect from 'expect';
+import should from 'should';
 import Placement from './placement';
 import Transaction from './transaction';
 import Reward from './reward';
@@ -49,6 +50,14 @@ const mockedOpenTransactionsResponse = {
   transactions: mockedOpenTransactions,
 };
 
+const requestOptions = {
+  user: {
+    id: '12345',
+    gender: 'female',
+    name: 'Stefanie Müller',
+    facebookUserId: '777',
+  },
+};
 
 describe('Placement', () => {
   let requests;
@@ -58,8 +67,8 @@ describe('Placement', () => {
     apiKey: 'abc123',
     placementId: 'tvsa',
     installId: 'aabbccdd-aabb-ccdd-eeff-112233445566',
-    requestFunction: (requestOptions) => { // mock requests, saving their options.
-      requests.push(requestOptions);
+    requestFunction: (opts) => { // mock requests, saving their options.
+      requests.push(opts);
     },
   };
 
@@ -89,15 +98,6 @@ describe('Placement', () => {
   });
 
   describe('#requestAd', () => {
-    const requestOptions = {
-      user: {
-        id: '12345',
-        gender: 'female',
-        name: 'Stefanie Müller',
-        facebookUserId: '777',
-      },
-    };
-
     it('sends an ad request to the server', () => {
       new Placement(options).requestAd(requestOptions);
       requests.length.should.equal(1);
@@ -187,6 +187,26 @@ describe('Placement', () => {
         );
         receiveResponses({}, [mockedOpenTransactionsResponse]);
         called.should.equal(true);
+      });
+
+      it('sends correct adId in adDismissed event to the server', () => {
+        const placement = new Placement(options);
+        placement.requestAd(requestOptions);
+        receiveResponses();
+        placement.requestAnotherAdAfter = () => {}; // avoid side effects
+        placement.dismissAd();
+        requests.length.should.equal(2);
+        requests[1].data.should.eql([{ type: 'adDismissed', adId: 'xyz' }]);
+      });
+
+      it('expires the ad after given expiration date', () => {
+        const placement = new Placement(options);
+        placement.requestAd(requestOptions);
+        let milliseconds;
+        placement.requestAnotherAdAfter = (ms) => { milliseconds = ms; };
+        const fiveMinutes = 5 * 60 * 1000;
+        receiveResponses({ expiry: new Date(+new Date() + fiveMinutes).toISOString() });
+        milliseconds.should.be.approximately(fiveMinutes, 5);
       });
 
       describe('onOpenTransactions callback', () => {
@@ -297,17 +317,83 @@ describe('Placement', () => {
   });
 
   describe('#dismissAd', () => {
-    it('dismisses the ad');
-    it('calls onOpenTransactions callback when transactions are available');
-    it('sets a timeout to request another ad');
+    let placement;
+    let milliseconds;
+
+    beforeEach(() => {
+      placement = new Placement(options);
+      milliseconds = undefined;
+      placement.requestAnotherAdAfter = (ms) => { milliseconds = ms; };
+    });
+
+    it('sets DISMISSED state', () => {
+      placement.dismissAd();
+      placement.state.should.equal('DISMISSED');
+    });
+
+    it('sends an adDismissed event to the server', () => {
+      placement.adId = 'should be visible in response';
+      placement.dismissAd();
+      requests.length.should.equal(1);
+      requests[0].data.should.eql([{ type: 'adDismissed', adId: placement.adId }]);
+    });
+
+    it('sets a timeout to request another ad if adDismissed event worked', () => {
+      placement.dismissAd();
+      requests[0].callback(undefined, []);
+      milliseconds.should.equal(1000);
+    });
+
+    it('sets no timeout if adDismissed event did not work', () => {
+      placement.dismissAd();
+      requests[0].callback(new Error('some error'));
+      should.equal(milliseconds, undefined);
+    });
+
+    it('calls onOpenTransactions callback when transactions are available', () => {
+      let transactions;
+      placement.requestAd(
+        Object.assign({ onOpenTransactions: (t) => { transactions = t; } }, requestOptions)
+      );
+      requests.length.should.equal(1);
+      placement.dismissAd();
+      requests.length.should.equal(2);
+      requests[1].callback(null, [mockedOpenTransactionsResponse]);
+      transactions.length.should.equal(2);
+    });
   });
 
   describe('#requestAnotherAdAfter', () => {
-    it('requests an ad using the same ad request options as last time');
-    it('removes existing timeouts');
-  });
+    it('fails when making a request while another one runs', (done) => {
+      const placement = new Placement(options);
+      placement.requestAd(requestOptions);
+      requests.length.should.equal(1);
+      placement.requestAnotherAdAfter(0);
+      setTimeout(() => {
+        requests.length.should.equal(1);
+        done();
+      }, 10);
+    });
 
-  describe('#confirmTransactions', () => {
-    it('confirms all given transactions to the backend');
+    it('requests an ad using the same ad request options as last time', (done) => {
+      const timeoutTestRequests = [];
+      const placement = new Placement(Object.assign({}, options, {
+        placementId: 'test',
+        requestFunction: (opts) => { // mock requests, saving their options.
+          console.log(JSON.stringify(opts, 2, true));
+          timeoutTestRequests.push(opts);
+        },
+      }));
+      placement.requestAd(requestOptions);
+      timeoutTestRequests.length.should.equal(1);
+      // Faking a adNoFill answer will allow the placement to make a new request directly.
+      timeoutTestRequests[0].callback(undefined, [{ type: 'adNoFill' }]);
+      placement.requestAnotherAdAfter(0);
+      setTimeout(() => {
+        timeoutTestRequests.length.should.equal(2);
+        timeoutTestRequests[1].should.eql(timeoutTestRequests[0]);
+        done();
+      }, 100);
+    });
   });
 });
