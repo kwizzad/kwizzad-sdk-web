@@ -18,14 +18,14 @@
         // completely.
         var kwizzad = new Kwizzad({
           apiKey: 'b81e71a86cf1314d249791138d642e6c4bd08240f21dd31811dc873df5d7469d',
-          placementId: 'tvsa',
+          placementId: 'web_sdk_test',
         }).render().requestAd({
           // By supplying user data, your users can get better targeted ads. Each attribute is optional.
           user: {
-            id: '12345',             // unique ID that identifies the user inside your app
+            id: '1337',              // unique ID that identifies the user inside your app
             gender: 'female',        // 'male', 'female' or null
             name: 'Stefanie Müller', // user realname inside your app, if existing
-            facebookUserId: '777'    // if your users log in over Facebook
+            facebookUserId: '123'    // if your users log in over Facebook
           },
 
           onAdLoading: function() {
