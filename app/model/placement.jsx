@@ -32,7 +32,7 @@ export default class Placement {
       throw new Error('Please supply valid placement options.');
     }
 
-    this.options = options;
+    this.options = Object.assign({}, options);
     this.options.baseUrl = this.options.baseUrl || defaults.baseUrl;
 
     if (typeof this.options.baseUrl !== 'string') {
