@@ -214,6 +214,7 @@ export default class Placement {
 
   showAd(response, options) {
     console.log('Showing ad', response, options);
+    clearTimeout(this.nextAdRequestTimeout);
     const expireDate = new Date(response.expiry);
     if (new Date() < expireDate) {
       console.log('Showing ad...');
@@ -230,6 +231,7 @@ export default class Placement {
 
 
   dismissAd() {
+    clearTimeout(this.nextAdRequestTimeout);
     this.setState('DISMISSED');
     this.makeAPIRequest({
       data: [{
