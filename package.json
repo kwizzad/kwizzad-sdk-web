@@ -1,7 +1,7 @@
 {
   "name": "kwizzad-web-sdk",
   "private": true,
-  "version": "0.7.1",
+  "version": "0.7.2",
   "description": "Shows Kwizzad campaigns embedded in a web site.",
   "main": "public/index.js",
   "scripts": {
