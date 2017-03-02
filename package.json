@@ -6,10 +6,10 @@
   "main": "public/index.js",
   "scripts": {
     "start": "NODE_ENV=development ./node_modules/webpack-dev-server/bin/webpack-dev-server.js --content-base public/ --hot --inline --devtool eval --host 0.0.0.0",
-    "build": "./node_modules/webpack/bin/webpack.js -p && mkdir -p public/public && mv public/bundle.js public/public/bundle.js && mkdir -p versions && rm -f versions/current.tar.gz && tar --exclude 'public/versions' -czf versions/current.tar.gz public && (echo `date +\"%Y-%m-%d-%H.%M.%S.%3N\"`-${GIT_COMMIT} > versions/VERSION) && cp versions/current.tar.gz versions/`cat versions/VERSION`.tar.gz",
+    "build": "./node_modules/webpack/bin/webpack.js -p",
     "deploy-dev": "node s3-upload.js -d develop",
     "deploy-feature": "node s3-upload.js -d feature",
-    "test": "node -v",
+    "test": "karma start --single-run",
     "preversion": "npm test",
     "version": "npm run build",
     "postversion": "npm test"
