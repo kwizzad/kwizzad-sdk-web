@@ -23,6 +23,7 @@ const AllowedAdStates = [
 const StatesThatAllowRequests = [
   'INITIAL',
   'NOFILL',
+  'AD_READY', // after expiration
   'DISMISSED',
 ];
 
@@ -55,7 +56,7 @@ export default class Placement {
     if (!AllowedAdStates.includes(newState)) {
       throw new Error('Invalid placement state');
     }
-    console.log('Placement going from', this.state, '->', newState);
+    console.log('Placement', this.options.placementId, 'going from', this.state, '->', newState);
     this.state = newState;
     if (typeof this.options.onStateChange === 'function') {
       this.options.onStateChange(this, newState);
@@ -118,9 +119,27 @@ export default class Placement {
 
 
   requestAnotherAdAfter(milliseconds) {
+    if (milliseconds < 0) {
+      throw new Error('Invalid time interval');
+    }
     const options = this.lastAdRequestOptions;
+    if (!options) {
+      console.log('Cannot request another ad when there was no first ad request.');
+      return;
+    }
+    console.log('Requesting another ad after', milliseconds, 'ms');
     clearTimeout(this.nextAdRequestTimeout);
     this.nextAdRequestTimeout = setTimeout(() => this.requestAd(options), milliseconds);
+  }
+
+
+  requestAnotherAdOnDate(dateString) {
+    const date = new Date(dateString);
+    const now = new Date();
+    const milliseconds = +date - now;
+    if (milliseconds > 0) {
+      this.requestAnotherAdAfter(milliseconds);
+    }
   }
 
 
@@ -176,11 +195,7 @@ export default class Placement {
       options.onNoFill(this);
     }
     if (response.retryAfter) {
-      const retryDate = new Date(response.retryAfter);
-      const milliseconds = +retryDate - new Date();
-      if (milliseconds > 0) {
-        this.requestAnotherAdAfter(milliseconds);
-      }
+      this.requestAnotherAdOnDate(response.retryAfter);
     }
   }
 
@@ -202,11 +217,17 @@ export default class Placement {
       options.onAdResponse(response, options);
     }
 
-    const potentialRewards = (response.rewards || []).map(reward => new Reward(reward));
-    potentialRewards.incentiveText = incentiveTextForRewards(potentialRewards);
-    const showAd = () => this.showAd(response, options);
+    if (response.expiry) {
+      this.requestAnotherAdOnDate(response.expiry);
+    }
+
+    // For now, our ad can be shown directly, we don't wait for the DOM to be rendered within
+    // the iframe.
     this.setState('AD_READY');
     if (typeof options.onAdAvailable === 'function') {
+      const showAd = () => this.showAd(response, options);
+      const potentialRewards = (response.rewards || []).map(reward => new Reward(reward));
+      potentialRewards.incentiveText = incentiveTextForRewards(potentialRewards);
       options.onAdAvailable(showAd, potentialRewards);
     }
   }
@@ -239,19 +260,18 @@ export default class Placement {
         adId: this.adId,
       }],
       callback: (error, responses) => {
-        if (error) {
+        if (error || !(responses instanceof Array)) {
           console.log('Could not send dismissedAd event.', error, responses);
           return;
         }
         this.requestAnotherAdAfter(1000);
-        if (responses instanceof Array) {
-          responses.forEach(response => this.handleResponse(response));
-        }
+        responses.forEach(response => this.handleResponse(response));
       },
     });
   }
 
 
+  // Not used yet.
   shouldCloseButtonBeVisible() {
     switch (this.state.closeType) {
       case 'AFTER_CALL2ACTION':
