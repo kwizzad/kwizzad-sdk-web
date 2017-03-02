@@ -24,20 +24,36 @@ button.kwizzad-close-dialog
   border: none
   outline: none
   position: absolute
-  left: 0
-  top: 0
+  right: -15px;
+  top: -15px;
   font-size: 30px
   line-height: 100%
-  width: 50px
-  height: 50px
+  width: 40px
+  height: 40px
   cursor: pointer
+  transform: scale3d(1, 1, 1)
+  transition: transform 0.1s ease-out
+  user-select: none
+  -webkit-user-drag: none
+  background-color: rgba(0, 0, 0, 0.7)
+  border-radius: 100px
+  border: rgba(255, 255, 255, 0.24) 1px solid
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   svg
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-  &:hover, &:active
-    background-color: lighten(color-red, 10%)
+    pointer-events: none
+  &:hover
+    background-color: rgba(0, 0, 0, 0.8)
+  &:active
+    transform: scale3d(0.9, 0.9, 0.9)
+    background-color: rgba(0, 0, 0, 0.8)
+  &:focus
+    background-color: rgba(0, 0, 0, 0.8)
+
+
 
 .kwizzad-modal-dialog-fullscreen-overlay
   background-color: rgba(0, 0, 0, 0.93)
@@ -66,5 +82,3 @@ button.kwizzad-close-dialog
         default-font()
         font-size: 1em
         color: white
-      &.kwizzad-close-dialog
-        background-color: color-red
