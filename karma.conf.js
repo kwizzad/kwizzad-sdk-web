@@ -16,9 +16,6 @@ module.exports = (config) => {
     frameworks: ['mocha', 'should'],
     logLevel: config.LOG_DEBUG,
     files: [
-      // { pattern: '*-test.jsx', watched: false },
-      // { pattern: '**/*-test.jsx', watched: false },
-      { pattern: '*-test.jsx' },
       { pattern: '**/*-test.jsx' },
     ],
     preprocessors: {
