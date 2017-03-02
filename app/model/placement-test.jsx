@@ -112,7 +112,7 @@ describe('Placement', () => {
         userId: '12345',
         facebookUserId: '777',
         userName: 'Stefanie Müller',
-        sdkVersion: '0.7.1',
+        sdkVersion: '0.7.2',
         gender: 'FEMALE',
       });
       requests[0].callback.should.be.an.instanceOf(Function);
