@@ -8,7 +8,6 @@ export default function Iframe(props) {
     className="kwizzad-iframe"
     allowFullScreen
     frameBorder="0"
-    scrolling="no"
     marginHeight="0"
     marginWidth="0"
   />);
