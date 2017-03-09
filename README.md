@@ -14,7 +14,7 @@ website.
 - In your app, include the Kwizzad SDK Javascript in your app like in `index.html`: Append
   `<script src="kwizzad.js" async defer></script>` to the end of your HTML `<body>` tag, and have a
   look at the `<script>` for an example how to make an ad request with Kwizzad. For details, see
-  below.  
+  below.
 - Ensure you load the web page over HTTP and not directly from the file system. When serving the
   page via a file:// URL, restrictions apply. On Mac, you can run a HTTP server from the root
   directory for testing with `python -m SimpleHTTPServer 8000`, then open
@@ -48,6 +48,79 @@ them.
 
 Have a look at [`index.html`](./public/index.html), which demonstrates how to integrate Kwizzad ads
 into your website.
+
+For implementing, you need a UI element in the DOM that the user can click/tap to open an ad.
+Kwizzad lets you customize when an ad is actually opened. The handling works like this:
+
+```javascript
+// Kwizzad calls this function as soon as the library is loaded.
+window.onKwizzadLoaded = function(Kwizzad) {
+  var lastShowAdFunction = null;
+  var button = document.getElementById('kwizzad-button');
+
+  // Request and preload an ad. If you want your page to become responsive faster, you can
+  // choose to call `render`/`requestAd` later, when your page's main content has finished loading.
+  var kwizzad = new Kwizzad({
+    apiKey: 'b81e71a86cf1314d249791138d642e6c4bd08240f21dd31811dc873df5d7469d',
+    placementId: 'web_sdk_test',
+  }).render().requestAd({
+    // By supplying user data, your users can get better targeted ads. Each attribute is optional.
+    user: {
+      id: '1337',              // unique ID that identifies the user inside your app
+      gender: 'female',        // 'male', 'female' or null
+      name: 'Stefanie Müller', // user realname inside your app, if existing
+      facebookUserId: '123'    // if your users log in over Facebook
+    },
+
+    onAdLoading: function() {
+      button.innerHTML = "Loading ad…";
+      button.disabled = true;
+    },
+
+    // Kwizzad SDK calls this back when there is an ad for your request.
+    onAdAvailable: function(showAd, potentialRewards) {
+      // potentialRewards is an array of reward objects that the user can earn.
+      button.innerHTML = potentialRewards.incentiveText;
+      button.disabled = false;
+      if (lastShowAdFunction) {
+        button.removeEventListener('click', lastShowAdFunction);
+      }
+      lastShowAdFunction = showAd;
+      button.addEventListener('click', lastShowAdFunction);
+    },
+
+    // Called back when the user played the campaign or dismissed the ad.
+    onAdDismissed: function() {
+      button.innerHTML = 'Waiting for next quiz...';
+      button.disabled = true;
+    },
+
+    // Called back with reward information that the user has to confirm.
+    onOpenTransactions: function(openTransactions) {
+      // Here you should show a rewarding UI that displays all pending transactions.
+
+      // Each transaction in `openTransactions` contains one or more reward objects.
+      // The server will send the same transactions again until your code confirms them by
+      // calling their `confirm` method, like an inbox.
+
+      // It's a good idea to show a summary of all pending rewards so the user can confirm
+      // all at once, but it's up to you if you want to show a single notification for each
+      // reward.
+
+      if (confirm(openTransactions.summarizedRewardConfirmationText)) {
+        openTransactions.confirmAll();
+      }
+    },
+
+    // Called back if no ad is available for your request. Note that Kwizzad
+    // automatically retries to fetch ads in the background and calls `onAdAvailable` then.
+    // Here you can customize your UI element appearance for the case when there is no ad.
+    onNoFill: function() {
+      button.innerHTML = 'No quiz available.';
+    },
+  });
+};
+```
 
 
 ## For developers: contribution guidelines
