@@ -46,6 +46,25 @@ export default class KwizzadDialog extends Component {
     return this;
   }
 
+  componentWillMount() {
+    this.setHeight = () => {
+      const height = window.innerHeight;
+      if (height !== 0) {
+        this.setState({ height });
+        // Height might not be set yet on first rendering, so set it again after one frame
+        setTimeout(() => {
+          this.setState({ height });
+        });
+      }
+    };
+
+    window.addEventListener('resize', this.setHeight);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.setHeight);
+  }
+
   render() {
     return (<ModalDialog
       className="iframe"
@@ -59,6 +78,7 @@ export default class KwizzadDialog extends Component {
         if (typeof this.props.onClose === 'function') { this.props.onClose(); }
       }}
       isVisible={Boolean(this.state.src) && this.state.isVisible}
+      height={this.state.height}
     >
       <Iframe {...this.state} />
     </ModalDialog>);

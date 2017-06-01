@@ -1,3 +1,4 @@
+// @flow
 /* globals PACKAGE_VERSION */
 import requestJSON from 'app/lib/request';
 import defaults from 'app/lib/defaults';
@@ -26,6 +27,40 @@ const StatesThatAllowRequests = [
   'AD_READY', // after expiration
   'DISMISSED',
 ];
+
+function operatingSystemFromUserAgent() {
+  const ua = navigator.userAgent;
+  if (ua.match(/Windows/)) {
+    return 'Windows';
+  } else if (ua.match(/Windows/)) {
+    return 'Android';
+  } else if (ua.match(/iOS/)) {
+    return 'iOS';
+  } else if (ua.match(/Macintosh/)) {
+    return 'Macintosh';
+  } else if (ua.match(/Android/)) {
+    return 'Android';
+  } else if (ua.match(/Linux/)) {
+    return 'Linux';
+  }
+  return 'Unkwown';
+}
+
+function adMetaInfoFromResponse(response) {
+  const potentialRewards = (response.rewards || []).map(reward => new Reward(reward));
+  potentialRewards.incentiveText = incentiveTextForRewards(potentialRewards);
+  const images
+  return {
+    potentialRewards,
+    teaser,
+    brand,
+    headline,
+    images,
+    squaredThumbnailUrl(width = 200) {
+      return images.find(image => image.type === 'header').url(width);
+    },
+  };
+}
 
 export default class Placement {
   constructor(options = {}) {
@@ -65,7 +100,7 @@ export default class Placement {
 
 
   makeAPIRequest(options) {
-    const requestFunction = this.options.requestFunction || requestJSON;
+    let requestFunction = this.options.requestFunction || requestJSON;
     const installId = this.options.installId || getInstallId();
     const url = `${this.options.baseUrl.replace(/\/?/, '')}/${this.options.apiKey}/${installId}`;
     requestFunction(Object.assign({ url, method: 'POST' }, options));
@@ -96,10 +131,12 @@ export default class Placement {
         deviceInformation: navigator.userAgent,
         userData: {
           apiVersion: '1.0',
-          PlatformType: 'Web',
+          PlatformType: operatingSystemFromUserAgent(),
+          sdkType: 'Web',
           userId: user && user.id,
           userName: user && user.name,
           sdkVersion: PACKAGE_VERSION,
+          userAgent: navigator.userAgent,
           gender: user && user.gender && user.gender.toUpperCase(),
           facebookUserId: user && user.facebookUserId,
         },
@@ -226,9 +263,7 @@ export default class Placement {
     this.setState('AD_READY');
     if (typeof options.onAdAvailable === 'function') {
       const showAd = () => this.showAd(response, options);
-      const potentialRewards = (response.rewards || []).map(reward => new Reward(reward));
-      potentialRewards.incentiveText = incentiveTextForRewards(potentialRewards);
-      options.onAdAvailable(showAd, potentialRewards);
+      options.onAdAvailable(showAd, adMetaInfoFromResponse(response));
     }
   }
 

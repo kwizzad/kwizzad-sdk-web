@@ -74,7 +74,7 @@ const config = {
     hot: true,
   },
   stylus: {
-    use: [nib],
+    use: [nib()],
     preferPathResolver: 'webpack',
     import: ['~nib/lib/nib/index.styl'],
   },

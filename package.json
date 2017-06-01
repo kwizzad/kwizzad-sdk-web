@@ -5,7 +5,7 @@
   "description": "Shows Kwizzad campaigns embedded in a web site.",
   "main": "public/index.js",
   "scripts": {
-    "start": "NODE_ENV=development ./node_modules/webpack-dev-server/bin/webpack-dev-server.js --content-base public/ --hot --inline --devtool eval --host 0.0.0.0",
+    "start": "NODE_ENV=development ./node_modules/webpack-dev-server/bin/webpack-dev-server.js --content-base public/ --hot --inline --devtool eval --host 10.11.1.137",
     "build": "./node_modules/webpack/bin/webpack.js -p",
     "deploy-dev": "node s3-upload.js -d develop",
     "deploy-feature": "node s3-upload.js -d feature",
@@ -73,7 +73,8 @@
   },
   "eslintConfig": {
     "plugins": [
-      "mocha"
+      "mocha",
+      "flowtype"
     ],
     "env": {
       "browser": true,
@@ -83,7 +84,8 @@
       "import/resolver": "webpack"
     },
     "extends": [
-      "airbnb"
+      "airbnb",
+      "plugin:flowtype/recommended"
     ],
     "parser": "babel-eslint",
     "parserOptions": {
