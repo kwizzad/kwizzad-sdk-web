@@ -9,9 +9,7 @@ suppress_type=$FlowIssue
 [ignore]
 .*/build/.*
 .*\.html
+.*/node_modules/radium/src/.*
 
 [libs]
 ./node_modules/fbjs/flow/lib
-
-[ignore]
-# .*/node_modules/radium/src/.*
