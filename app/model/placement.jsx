@@ -1,9 +1,10 @@
 // @flow
+
 /* globals PACKAGE_VERSION */
-import requestJSON from 'app/lib/request';
-import defaults from 'app/lib/defaults';
+import requestJSON from '../lib/request';
+import defaults from '../lib/defaults';
 import getInstallId from './install-id';
-import Reward, { incentiveTextForRewards } from './reward';
+import Reward, { incentiveTextForRewards, summarize as summarizeRewards } from './reward';
 import { transactionsFromJSON } from './transaction';
 
 
@@ -48,14 +49,25 @@ function operatingSystemFromUserAgent() {
 
 function adMetaInfoFromResponse(response) {
   const potentialRewards = (response.rewards || []).map(reward => new Reward(reward));
-  potentialRewards.incentiveText = incentiveTextForRewards(potentialRewards);
-  const images
+  const incentiveText = incentiveTextForRewards(potentialRewards);
+  const maximalReward = summarizeRewards(potentialRewards)[0];
+  const images = response.images.map(image => {
+    const preformattedImageUrl = image.url;
+    return Object.assign(image, {
+      url(width, height) {
+        if (!this.urlTemplate) return preformattedImageUrl;
+        return this.urlTemplate
+            .replace(/{{width}}/, width || 0)
+            .replace(/{{height}}/, height || 0);
+      },
+    });
+  });
   return {
     potentialRewards,
-    teaser,
-    brand,
-    headline,
+    incentiveText,
+    ad: response.ad,
     images,
+    maximalReward,
     squaredThumbnailUrl(width = 200) {
       return images.find(image => image.type === 'header').url(width);
     },

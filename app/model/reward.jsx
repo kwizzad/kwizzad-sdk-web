@@ -52,7 +52,7 @@ function uniqueRewardCurrencies(rewards) {
 // Returns one `Reward` object per found currency in the given rewards. The amount of each reward
 // is the sum of the given reward amounts in the same currency.
 
-function summarize(rewards) {
+export function summarize(rewards) {
   const rewardsByCurrency = groupBy(rewards, reward => reward.currency);
   return Object.keys(rewardsByCurrency).map(currency => {
     const amount = sum(rewardsByCurrency[currency].map(reward => reward.amount));

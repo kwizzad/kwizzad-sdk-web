@@ -7,7 +7,7 @@ export const translations = {
   en: {
     reward: {
       withLimit: 'up to {reward}',
-      incentiveText: 'Earn {potentialTotalReward} with a quiz!',
+      incentiveText: 'Earn {potentialTotalReward} with a quiz',
     },
     transaction: {
       confirmationText: 'Congratulations, you earned {oneOrMoreRewards}!',
@@ -20,7 +20,7 @@ export const translations = {
   de: {
     reward: {
       withLimit: 'bis zu {reward}',
-      incentiveText: 'Verdiene {potentialTotalReward} mit einem Quiz!',
+      incentiveText: 'Verdiene {potentialTotalReward} mit einem Quiz',
     },
     transaction: {
       confirmationText: 'Herzlichen Glückwunsch zu {oneOrMoreRewards}!',

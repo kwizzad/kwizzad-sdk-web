@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="index.css">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400" rel="stylesheet">
-    <script src="index.js" charset="utf-8"></script>
+    <!--<script src="public/index.js" charset="utf-8"></script>-->
 
     <script>
       // This function is called back by Kwizzad as soon as it is loaded completely.
@@ -35,9 +35,21 @@
           },
 
           // Kwizzad SDK calls this back when there is an ad for your request.
-          onAdAvailable: function(showAd, potentialRewards) {
-            // potentialRewards is an array of reward objects that the user can earn.
-            button.innerHTML = potentialRewards.incentiveText;
+          onAdAvailable: function(showAd, adMetaInfo) {
+            // Additionally available here:
+            // - `adMetaInfo.potentialRewards` is an array of reward objects that the user can earn.
+
+            button.innerHTML =
+              "<div id='kwizzad-flex-columns'>" +
+                "<img id='kwizzad-ad-image' src=" + adMetaInfo.squaredThumbnailUrl(100) + ">" +
+                "<div id='kwizzad-ad-content'>" +
+                  "<div id='kwizzad-headline'>" + adMetaInfo.ad.headline + "</div>" +
+                  "<div id='kwizzad-incentive-text'>" + adMetaInfo.incentiveText + "</div>" +
+                "</div>" +
+                "<div id='kwizzad-reward-amount-badge'>+" + adMetaInfo.maximalReward.amount + "</div>" +
+              "</div>" +
+              "<div id='kwizzad-teaser'>" + adMetaInfo.ad.teaser + "</div>";
+
             button.disabled = false;
             if (lastShowAdFunction) {
               button.removeEventListener('click', lastShowAdFunction);
@@ -72,18 +84,18 @@
             // Optional alternative flow for showing/confirming each single transaction:
 
             // openTransactions.forEach(function (transaction) {
-              // Available here:
-              // - transaction.rewardConfirmationText()
-              // - transaction.reward.amount
-              // - transaction.reward.maxAmount
-              // - transaction.reward.currency
-              // - transaction.reward.type
-              // - transaction.reward.valueDescription
-              // - transaction.reward.debugValueDescription
-              // if (confirm(transaction.rewardConfirmationText())) {
-                // Removes the transaction from the inbox and triggers payout
-                // transaction.confirm();
-              // }
+            //   // Available here:
+            //   // - transaction.rewardConfirmationText()
+            //   // - transaction.reward.amount
+            //   // - transaction.reward.maxAmount
+            //   // - transaction.reward.currency
+            //   // - transaction.reward.type
+            //   // - transaction.reward.valueDescription
+            //   // - transaction.reward.debugValueDescription
+            //   if (confirm(transaction.rewardConfirmationText())) {
+            //     Removes the transaction from the inbox and triggers payout
+            //     transaction.confirm();
+            //   }
             // });
           },
 
@@ -109,10 +121,12 @@
       <a href='https://kwizzad.com/'><img id='kwizzad-logo' src='icons/icon-512.png'></a>
     </header>
 
-    <button id='kwizzad-button' disabled>Initializing…</button>
+    <button id='kwizzad-button' disabled>
+      Initializing…
+    </button>
 
     <noscript>Please enable JavaScript for this demo.</noscript>
 
-    <script src="kwizzad.js" async defer></script>
+    <script src="public/kwizzad.js" async defer></script>
   </body>
 </html>
