@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 
 import React, { Component } from 'react';
-import { default as p } from 'app/lib/prefix-css-classes';
+import { default as p } from '../lib/prefix-css-classes';
 import './modal-dialog.styl';
 
 

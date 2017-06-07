@@ -1,11 +1,12 @@
 /* eslint import/no-extraneous-dependencies:0 */
 const webpack = require('webpack');
 const nib = require('nib');
+const autoprefixer = require('autoprefixer');
 const path = require('path');
 const package = require('./package.json');
 
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const config = {
   context: __dirname,
@@ -32,6 +33,7 @@ const config = {
       {
         test: /\.styl$/,
         loader: 'style-loader!css-loader!stylus-loader',
+        // loader: 'style-loader!css-loader!postcss-loader?parser=sugarss',
       },
       {
         test: /\.woff$/,
@@ -46,25 +48,33 @@ const config = {
     ],
   },
   resolve: {
-    root: [
-      path.join(__dirname, 'node_modules'),
-      __dirname,
-    ],
-    extensions: ['', '.js', '.jsx', '.json', '.styl', '.woff'],
-    // alias: {
-    //   react: 'react-lite',
-    //   'react-dom': 'react-lite',
-    // },
+    extensions: ['.js', '.jsx', '.json', '.styl', '.woff'],
+    alias: {
+      // react: 'react-lite',
+      // 'react-dom': 'react-lite',
+      'react': 'preact-compat',
+      'react-dom': 'preact-compat'
+    },
   },
   plugins: [
-    new ExtractTextPlugin('main.css', { allChunks: true }),
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: JSON.stringify(process.env.NODE_ENV),
       },
       'PACKAGE_VERSION': `'${package.version}'`,
     }),
-    // new BundleAnalyzerPlugin(),
+    new webpack.LoaderOptionsPlugin({
+      options: {
+        stylus: {
+          use: [nib()],
+          preferPathResolver: 'webpack',
+          import: ['~nib/lib/nib/index.styl'],
+        },
+        context: '/'
+      }
+    }),
+    new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /de|en/),
+    new BundleAnalyzerPlugin(),
   ],
   devServer: {
     historyApiFallback: true,
@@ -72,11 +82,6 @@ const config = {
     index: '/public/',
     inline: true,
     hot: true,
-  },
-  stylus: {
-    use: [nib()],
-    preferPathResolver: 'webpack',
-    import: ['~nib/lib/nib/index.styl'],
   },
 };
 

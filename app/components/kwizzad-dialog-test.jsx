@@ -1,6 +1,6 @@
 /* globals it */
 /* globals describe */
-import KwizzadDialog from 'app/components/kwizzad-dialog';
+import KwizzadDialog from '../components/kwizzad-dialog';
 import React from 'react';
 import TestUtils from 'react/lib/ReactTestUtils';
 import expect from 'expect';

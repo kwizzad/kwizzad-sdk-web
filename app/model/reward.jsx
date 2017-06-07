@@ -2,8 +2,8 @@ import moment from 'moment';
 import uniq from 'lodash/uniq';
 import sum from 'lodash/sum';
 import groupBy from 'lodash/groupBy';
-import { t } from 'app/lib/i18n';
-import enumerateAsText from 'app/lib/enumerate-as-text';
+import { t } from '../lib/i18n';
+import enumerateAsText from '../lib/enumerate-as-text';
 
 
 export default class Reward {

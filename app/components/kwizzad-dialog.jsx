@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import parseQueryParams from 'app/lib/query-params';
+import parseQueryParams from '../lib/query-params';
 import ModalDialog from './modal-dialog';
 import Iframe from './iframe';
 
