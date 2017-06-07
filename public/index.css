@@ -18,7 +18,7 @@ body {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  padding: 1em;
+  padding: 0.5em;
 }
 
 @media (orientation: portrait) {
@@ -30,15 +30,15 @@ body {
 body, button, h1 {
   font-family: 'Open Sans', sans-serif;
   font-weight: 300;
-  font-size: 40px;
+  font-size: 1.5em;
   line-height: 1.25;
   color: white;
 }
 
-@media (max-width: 320px), (max-height: 320px) {
-  body, button, h1 {
-    font-size: 24px;
-    line-height: 32px;
+@media (max-width: 400px), (max-height: 400px) {
+  body {
+    font-size: 20px;
+    line-height: 24px;
   }
 }
 
@@ -62,11 +62,11 @@ h1 {
 }
 
 #kwizzad-button {
-  width: 60%;
-  max-width: 420px;
+  font-size: 0.75em;
+  line-height: 1.25;
+  max-width: 490px;
   min-width: 300px;
   padding: 0;
-  font-size: 20px;
   border: none;
   outline: none;
   transition: transform 0.05s ease-out;
@@ -75,11 +75,12 @@ h1 {
   background: none;
   background-color: transparent;
   text-shadow: 0 0 1px black;
+  text-align: center;
 }
 
 #kwizzad-button:disabled {
   background: none;
-  opacity: 0.5;
+  opacity: 0.75;
 }
 
 #kwizzad-button:not(:disabled) {
@@ -89,12 +90,16 @@ h1 {
 #kwizzad-reward-amount-badge {
   margin: 10px;
   padding: 5px 10px;
+  border-radius: 20px;
+  background-color: #eab759;
+  font-weight: bold;
 }
 
 #kwizzad-flex-columns {
   display: flex;
   flex-direction: row;
   align-items: center;
+  text-align: left;
 }
 
 #kwizzad-logo {
@@ -136,15 +141,43 @@ h1 {
   transform: scale(0.95, 0.95);
 }
 
+@keyframes fadein {
+  0% {
+    opacity: 0;
+    transform: translate(0, -5px)
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0, 0)
+  }
+}
 
 #kwizzad-teaser {
   position: absolute;
+  width: 80%;
+  left: 10%;
   margin-top: 30px;
   text-align: left;
   opacity: 0.9;
   padding: 10px 15px;
   border-radius: 15px;
   font-size: 90%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.65);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  line-height: 1.5;
+  animation: fadein 0.5s ease-out;
+}
+
+#kwizzad-teaser:before {
+  content: ' ';
+  display: block;
+  width: 0;
+  height: 0;
+  border: solid 15px transparent;
+  opacity: 0.9;
+  border-bottom-color: rgba(0, 0, 0, 0.65);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: -30px;
 }
