@@ -3,12 +3,12 @@
 This repository is for the Kwizzad web SDK, which helps you embed Kwizzad campaigns into your
 website.
 
-Have a look at [our demo website](kwizzad.github.io/kwizzad-sdk-web/) to see an example!
+Have a look at [our demo website](https://kwizzad.github.io/kwizzad-sdk-web/) to see an example!
 
 
 ## For publishers: How to embed the SDK into your website
 
-- [Download our latest zip build](https://kwizzad.github.io/kwizzad-sdk-web/kwizzad-web-sdk-demo.zip) that contains everything to get
+- [Download our latest zip build](https://kwizzad.github.io/kwizzad-sdk-web/kwizzad-demo.zip) that contains everything to get
   started. Simply extract it, and open `index.html`.
 - Get an API key and placement ID(s) from the Kwizzad publisher support team. The support team can
   also provide a test placement ID that always returns an ad for testing purposes.
