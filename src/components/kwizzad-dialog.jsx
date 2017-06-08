@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import parseQueryParams from '../lib/query-params';
-import ModalDialog from './modal-dialog';
-import Iframe from './iframe';
+import parseQueryParams from '../lib/query-params.jsx';
+import ModalDialog from './modal-dialog.jsx';
+import Iframe from './iframe.jsx';
 
-import './kwizzad-dialog.styl';
+import './kwizzad-dialog.css';
 
 
 export default class KwizzadDialog extends Component {
@@ -18,7 +18,7 @@ export default class KwizzadDialog extends Component {
     const { hash, pathname } = window.location;
     const match = hash ? hash.match(pathRegexp) : pathname.match(pathRegexp);
     const hashQueryParamsString = (hash && (hash.match(/\?.*$/) || [])[0]) || '';
-    const queryParamsString = hash ? hashQueryParamsString : location.search;
+    const queryParamsString = hash ? hashQueryParamsString : window.location.search;
 
     this.state = {
       queryParams: parseQueryParams(queryParamsString),

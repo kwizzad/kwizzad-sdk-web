@@ -1,31 +1,24 @@
+/* globals PACKAGE_VERSION */
+
 import React from 'react';
 import pick from 'lodash/pick';
 import ReactDOM from 'react-dom';
-import Placement from './model/placement';
-import KwizzadDialog from './components/kwizzad-dialog';
-import { setLocale } from './lib/i18n';
+import Placement from './model/placement.jsx';
+import KwizzadDialog from './components/kwizzad-dialog.jsx';
+import { setLocale } from './lib/i18n.jsx';
 
-import './kwizzad.styl';
-
-if (module.hot) {
-  // eslint-disable-next-line global-require
-  require('webpack/hot/dev-server');
-}
-
-// This is necessary to enable hot module reloads in development.
-// eslint-disable-next-line
-__webpack_public_path__ = __webpack_public_path__ || '/public/';
-
+import './kwizzad.css';
 
 export default class Kwizzad {
+  static PACKAGE_VERSION = PACKAGE_VERSION;
+
   constructor(options) {
     this.options = options;
     this.options.placement = new Placement(pick(options,
       'placementId',
       'apiKey',
-      'baseUrl'
+      'baseUrl',
     ));
-    setLocale('de');
   }
 
   setLocale(locale) {
@@ -45,7 +38,7 @@ export default class Kwizzad {
       <KwizzadDialog
         {...props}
 
-        ref={ref => { this.dialog = ref; }}
+        ref={(ref) => { this.dialog = ref; }}
 
         onShow={() => {
           this.containerElement.classList.add('kwizzad-container-visible');
@@ -59,7 +52,7 @@ export default class Kwizzad {
           }, 1000);
         }}
       />,
-      this.containerElement
+      this.containerElement,
     );
 
     return this;
@@ -78,3 +71,5 @@ export default class Kwizzad {
 if (typeof window.onKwizzadLoaded === 'function') {
   window.onKwizzadLoaded(Kwizzad);
 }
+
+window.Kwizzad = Kwizzad;

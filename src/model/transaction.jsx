@@ -1,6 +1,6 @@
 import compact from 'lodash/compact';
-import { t } from '../lib/i18n';
-import Reward, { enumerateRewardsAsText } from './reward';
+import { t } from '../lib/i18n.jsx';
+import Reward, { enumerateRewardsAsText } from './reward.jsx';
 
 export default class Transaction {
   constructor(jsonData, confirmFunction) {

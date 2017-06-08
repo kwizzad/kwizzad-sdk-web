@@ -1,9 +1,8 @@
-import moment from 'moment';
 import uniq from 'lodash/uniq';
 import sum from 'lodash/sum';
 import groupBy from 'lodash/groupBy';
-import { t } from '../lib/i18n';
-import enumerateAsText from '../lib/enumerate-as-text';
+import { t } from '../lib/i18n.jsx';
+import enumerateAsText from '../lib/enumerate-as-text.jsx';
 
 
 export default class Reward {
@@ -32,15 +31,6 @@ export default class Reward {
 
   statusName() {
     return t(`rewardStatus.${this.status}`);
-  }
-
-  durationFromNow() {
-    return this.eventTimestamp && moment(this.eventTimestamp).fromNow();
-  }
-
-  averageDurationString() {
-    return this.averageDurationToCallback &&
-    moment.duration(this.averageDurationToCallback).humanize();
   }
 }
 

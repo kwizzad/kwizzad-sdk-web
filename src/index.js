@@ -1,0 +1,2 @@
+import Kwizzad from './kwizzad';
+

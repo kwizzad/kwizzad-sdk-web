@@ -1,8 +1,8 @@
 import expect from 'expect';
 import should from 'should';
-import Placement from './placement';
-import Transaction from './transaction';
-import Reward from './reward';
+import Placement from './placement.jsx';
+import Transaction from './transaction.jsx';
+import Reward from './reward.jsx';
 
 const mockedRewards = [
   { type: 'call2ActionStarted', amount: 3, maxAmount: 5, currency: 'spears' },

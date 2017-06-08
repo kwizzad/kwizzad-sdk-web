@@ -1,8 +1,8 @@
 /* eslint-disable max-len */
 
 import React, { Component } from 'react';
-import { default as p } from '../lib/prefix-css-classes';
-import './modal-dialog.styl';
+import { default as p } from '../lib/prefix-css-classes.jsx';
+import './modal-dialog.css';
 
 
 export default class ModalDialog extends Component {

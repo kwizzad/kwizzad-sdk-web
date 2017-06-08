@@ -1,11 +1,11 @@
 // @flow
 
 /* globals PACKAGE_VERSION */
-import requestJSON from '../lib/request';
-import defaults from '../lib/defaults';
-import getInstallId from './install-id';
-import Reward, { incentiveTextForRewards, summarize as summarizeRewards } from './reward';
-import { transactionsFromJSON } from './transaction';
+import requestJSON from '../lib/request.jsx';
+import defaults from '../lib/defaults.jsx';
+import getInstallId from './install-id.jsx';
+import Reward, { incentiveTextForRewards, summarize as summarizeRewards } from './reward.jsx';
+import { transactionsFromJSON } from './transaction.jsx';
 
 
 const AllowedAdStates = [
