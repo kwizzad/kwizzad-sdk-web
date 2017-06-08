@@ -4,23 +4,27 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="theme-color" content="#000000">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--
+      manifest.json provides metadata used when your web app is added to the
+      homescreen on Android. See https://developers.google.com/web/fundamentals/engage-and-retain/web-app-manifest/
+    -->
+    <link rel="manifest" href="/kwizzad-sdk-web/manifest.json">
+    <link rel="shortcut icon" href="/kwizzad-sdk-web/favicon.ico">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400" rel="stylesheet">
     <link rel="stylesheet" href="index.css">
+
+    <!--
+      Notice the use of /kwizzad-sdk-web in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "/kwizzad-sdk-web/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
     <title>Kwizzad Web SDK Demo</title>
-  </head>
-  <body>
-    <header>
-      <h1>Kwizzad Web SDK Demo</h1>
-      <a href='https://kwizzad.com/'><img id='kwizzad-logo' src='icons/icon-512.png'></a>
-    </header>
 
-    <noscript>
-      <div>You need to enable JavaScript to run this app.</div>
-    </noscript>
-
-    <!-- Start of Kwizzad's snippet -->
-    <link rel="stylesheet" href="kwizzad.204fe8a5.css">
-    <button id='kwizzad-button' disabled>Initializing…</button>
     <script>
       // This function is called back by Kwizzad as soon as it is loaded completely.
       window.onKwizzadLoaded = function(Kwizzad) {
@@ -31,27 +35,21 @@
         // choose to call `render`/`requestAd` later, when your page's main content is loaded
         // completely.
         var kwizzad = new Kwizzad({
-          // Replace this with the API key you got from the Kwizzad publisher support team:
           apiKey: 'b81e71a86cf1314d249791138d642e6c4bd08240f21dd31811dc873df5d7469d',
-
-          // Replace this with the placement ID you got from the Kwizzad publisher support team:
-          placementId: 'web_sdk_test_de',
+          placementId: 'web_sdk_test_en',
         }).render().requestAd({
           // By supplying user data, your users can get better targeted ads. Each attribute is optional.
           user: {
-            //id: '1337',              // unique ID that identifies the user inside your app
-            //gender: 'female',        // 'male', 'female' or null
-            //name: 'Stefanie Müller', // user realname inside your app, if existing
-            //facebookUserId: '123'    // if your users log in over Facebook
+            id: '1337',              // unique ID that identifies the user inside your app
+            gender: 'female',        // 'male', 'female' or null
+            name: 'Stefanie Müller', // user realname inside your app, if existing
+            facebookUserId: '123'    // if your users log in over Facebook
           },
 
-
           onAdLoading: function() {
-            // Here you can setup a UI element to indicate that an ad is being loaded.
             button.innerHTML = "Loading quiz…";
             button.disabled = true;
           },
-
 
           // Kwizzad SDK calls this back when there is an ad for your request.
           onAdAvailable: function(showAd, adMetaInfo) {
@@ -132,7 +130,31 @@
         });
       };
       </script>
-      <script src="kwizzad.27083968.js" async defer></script>
-    <!-- end of Kwizzad's snippet -->
-  </body>
+  <link href="/kwizzad-sdk-web/static/css/main.204fe8a5.css" rel="stylesheet"></head>
+  <body>
+    <header>
+      <h1>Kwizzad Web SDK Demo</h1>
+      <a href='https://kwizzad.com/'><img id='kwizzad-logo' src='icons/icon-512.png'></a>
+    </header>
+
+
+    <noscript>
+      <div>You need to enable JavaScript to run this app.</div>
+    </noscript>
+
+    <button id='kwizzad-button' disabled>
+      Initializing…
+    </button>
+
+    <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
+
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
+
+      To begin the development, run `npm start` or `yarn start`.
+      To create a production bundle, use `npm run build` or `yarn build`.
+    -->
+  <script type="text/javascript" src="/kwizzad-sdk-web/static/js/main.27083968.js"></script></body>
 </html>
