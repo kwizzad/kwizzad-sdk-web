@@ -3,22 +3,28 @@
 This repository is for the Kwizzad web SDK, which helps you embed Kwizzad campaigns into your
 website.
 
+Have a look at [our demo website](kwizzad.github.io/kwizzad-sdk-web/) to see an example!
+
 
 ## For publishers: How to embed the SDK into your website
 
-- Get an API key and placement ID(s) from your account manager. Your account manager can also
-  provide a test placement ID that always returns an ad for testing purposes.
-- If you simply want to try around with the SDK, run `npm install; npm start` from the command line
-  and open `http://localhost:8080/` in a web browser, which opens an example publisher web app
-  that integrates Kwizzad.
-- In your app, include the Kwizzad SDK Javascript in your app like in `index.html`: Append
-  `<script src="kwizzad.js" async defer></script>` to the end of your HTML `<body>` tag, and have a
-  look at the `<script>` for an example how to make an ad request with Kwizzad. For details, see
-  below.
-- Ensure you load the web page over HTTP and not directly from the file system. When serving the
-  page via a file:// URL, restrictions apply. On Mac, you can run a HTTP server from the root
-  directory for testing with `python -m SimpleHTTPServer 8000`, then open
-  [http://localhost:8000/public/](http://localhost:8000/public/).
+- [Download our latest zip build](https://kwizzad.github.io/kwizzad-sdk-web/kwizzad-web-sdk-demo.zip) that contains everything to get
+  started. Simply extract it, and open `index.html`.
+- Get an API key and placement ID(s) from the Kwizzad publisher support team. The support team can
+  also provide a test placement ID that always returns an ad for testing purposes.
+- Change `index.html` and `index.css` according to your needs. See the comments in the HTML for
+  explanations what to change.
+- Copy & paste the `.js` and the `.css` file into your own project.
+- Include a link to Kwizzad's CSS into your page.
+- In your app, include the Kwizzad SDK Javascript in your app like in `index.html`. See the <script>
+  tag at the end of the HTML's `<body>` tag to see how.
+
+
+Optional:
+
+If you want to try more advanced changes with the SDK, run `npm install; npm start` from the
+command line and open `http://localhost:8080/` in a web browser, which opens an example web app
+that integrates Kwizzad.
 
 ### Requesting and presenting ads
 
@@ -50,6 +56,17 @@ Have a look at [`index.html`](./public/index.html), which demonstrates how to in
 into your website.
 
 For implementing, you need a UI element in the DOM that the user can click/tap to open an ad.
+
+In your HTML, the element could just look like this:
+
+```html
+<button id='kwizzad-button'>Loading…</button>
+```
+
+The example code contains [an exemplary stylesheet for the ad button](./src/kwizzad.css).
+Of course you can customize the button's look to adapt it to your app's look and feel—just change
+the CSS for this.
+
 Kwizzad lets you customize when an ad is actually opened. The handling works like this:
 
 ```javascript
