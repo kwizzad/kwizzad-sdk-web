@@ -36,8 +36,7 @@
         // completely.
         var kwizzad = new Kwizzad({
           apiKey: 'b81e71a86cf1314d249791138d642e6c4bd08240f21dd31811dc873df5d7469d',
-          // placementId: 'web_sdk_test',
-          placementId: 'felix_shell_cpl',
+          placementId: 'web_sdk_test_en',
         }).render().requestAd({
           // By supplying user data, your users can get better targeted ads. Each attribute is optional.
           user: {
@@ -133,13 +132,15 @@
       </script>
   </head>
   <body>
-    <noscript>
-      You need to enable JavaScript to run this app.
-    </noscript>
     <header>
       <h1>Kwizzad Web SDK Demo</h1>
       <a href='https://kwizzad.com/'><img id='kwizzad-logo' src='icons/icon-512.png'></a>
     </header>
+
+
+    <noscript>
+      <div>You need to enable JavaScript to run this app.</div>
+    </noscript>
 
     <button id='kwizzad-button' disabled>
       Initializing…

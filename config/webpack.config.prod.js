@@ -13,7 +13,7 @@ const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 const paths = require('./paths');
 const getClientEnvironment = require('./env');
 const packageDefinition = require(paths.appPackageJson);
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // It requires a trailing slash, or the file assets will get an incorrect path.
@@ -252,7 +252,6 @@ module.exports = {
     // Otherwise React will be compiled in the very slow development mode.
     new webpack.DefinePlugin(env.stringified),
     // Minify the code.
-    new webpack.optimize.DedupePlugin(),
     new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.optimize.UglifyJsPlugin({
       compress: {
@@ -318,7 +317,7 @@ module.exports = {
       },
       'PACKAGE_VERSION': `'${packageDefinition.version}'`,
     }),
-    new BundleAnalyzerPlugin(),
+    // new BundleAnalyzerPlugin(),
   ],
   // Some libraries import Node modules but don't use them in the browser.
   // Tell Webpack to provide empty mocks for them so importing them works.
