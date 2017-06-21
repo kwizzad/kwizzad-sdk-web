@@ -57,19 +57,6 @@ export default class Kwizzad {
       this.containerElement,
     );
 
-    // Create IE + others compatible event handler
-    var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
-    var eventer = window[eventMethod];
-    var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
-
-    // Listen to message from child window
-    eventer(messageEvent, e => {
-      console.log('parent received message!', e.data)
-      if (e.data === 'kwizzad.call2Action') {
-        closeFn();
-      }
-    }, false);
-
     return this;
   }
 

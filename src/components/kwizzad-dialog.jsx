@@ -5,6 +5,7 @@ import Iframe from './iframe.jsx';
 
 import './kwizzad-dialog.css';
 
+let lastCloseEventListener = null;
 
 export default class KwizzadDialog extends Component {
   constructor(props) {
@@ -68,17 +69,32 @@ export default class KwizzadDialog extends Component {
   }
 
   render() {
+    if (lastCloseEventListener) {
+      window.removeEventListener('message', lastCloseEventListener);
+    }
+
+    const lastCloseFn = () => {
+      this.setState({ isVisible: false });
+      this.props.placement.dismissAd();
+      if (typeof this.onAdDismissed === 'function') {
+        this.onAdDismissed();
+      }
+      if (typeof this.props.onClose === 'function') { this.props.onClose(); }
+    };
+
+    lastCloseEventListener = e => {
+      if (e.data === 'kwizzad.call2Action') {
+        lastCloseFn();
+      }
+    };
+
+    // Listen to message from child window
+    window.addEventListener('message', lastCloseEventListener, false);
+
     return (<ModalDialog
       className="iframe"
       isRenderedIfInvisible
-      onClose={() => {
-        this.setState({ isVisible: false });
-        this.props.placement.dismissAd();
-        if (typeof this.onAdDismissed === 'function') {
-          this.onAdDismissed();
-        }
-        if (typeof this.props.onClose === 'function') { this.props.onClose(); }
-      }}
+      onClose={lastCloseFn}
       isVisible={Boolean(this.state.src) && this.state.isVisible}
       height={this.state.height}
     >
