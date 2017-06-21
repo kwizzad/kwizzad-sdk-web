@@ -34,6 +34,13 @@ export default class Kwizzad {
 
     const props = this.options;
 
+    const closeFn = () => {
+      this.containerElement.classList.remove('kwizzad-container-show');
+      setTimeout(() => {
+        this.containerElement.classList.remove('kwizzad-container-visible');
+      }, 1000);
+    };
+
     ReactDOM.render(
       <KwizzadDialog
         {...props}
@@ -45,15 +52,23 @@ export default class Kwizzad {
           setTimeout(() => this.containerElement.classList.add('kwizzad-container-show'), 200);
         }}
 
-        onClose={() => {
-          this.containerElement.classList.remove('kwizzad-container-show');
-          setTimeout(() => {
-            this.containerElement.classList.remove('kwizzad-container-visible');
-          }, 1000);
-        }}
+        onClose={closeFn}
       />,
       this.containerElement,
     );
+
+    // Create IE + others compatible event handler
+    var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+    var eventer = window[eventMethod];
+    var messageEvent = eventMethod === "attachEvent" ? "onmessage" : "message";
+
+    // Listen to message from child window
+    eventer(messageEvent, e => {
+      console.log('parent received message!', e.data)
+      if (e.data === 'kwizzad.call2Action') {
+        closeFn();
+      }
+    }, false);
 
     return this;
   }
@@ -71,5 +86,6 @@ export default class Kwizzad {
 if (typeof window.onKwizzadLoaded === 'function') {
   window.onKwizzadLoaded(Kwizzad);
 }
+
 
 window.Kwizzad = Kwizzad;

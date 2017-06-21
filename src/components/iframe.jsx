@@ -2,9 +2,14 @@ import React from 'react';
 import pick from 'lodash/pick';
 
 
+function addOpenTarget(url) {
+  return `${url}&openTarget=_blank`;
+}
+
+
 export default function Iframe(props) {
   return (<iframe
-    {...pick(props, 'src')}
+    src={addOpenTarget(props.src)}
     className="kwizzad-iframe"
     allowFullScreen
     frameBorder="0"
