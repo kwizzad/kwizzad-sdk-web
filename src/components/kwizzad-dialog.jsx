@@ -34,7 +34,9 @@ export default class KwizzadDialog extends Component {
   requestAd(options) {
     const requestOptions = {
       onAdResponse: (response) => {
-        this.setState({ src: response.url });
+        const url = response.url;
+        const param = `timestamp=${Date.now()}`;
+        this.setState({ src: url.match(/#/) ? url.replace(/#/, `?${param}#`) : `${url}&${param}` });
       },
       onShow: () => {
         if (typeof this.props.onShow === 'function') { this.props.onShow(); }
