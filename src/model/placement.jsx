@@ -1,6 +1,7 @@
 // @flow
 
 /* globals PACKAGE_VERSION */
+import uniq from 'lodash/uniq';
 import requestJSON from '../lib/request.jsx';
 import defaults from '../lib/defaults.jsx';
 import getInstallId from './install-id.jsx';
@@ -136,11 +137,17 @@ export default class Placement {
 
     this.lastAdRequestOptions = options;
 
+    this.userId = user && user.id;
+
+    const language = navigator.language.slice(0, 2);
+
     this.makeAPIRequest({
       data: [{
         type: 'adRequest',
         placementId: this.options.placementId,
         deviceInformation: navigator.userAgent,
+        language: language,
+        languages: uniq((navigator.languages || [language]).map(l => l.slice(0, 2))),
         userData: {
           apiVersion: '1.0',
           PlatformType: operatingSystemFromUserAgent(),
@@ -289,6 +296,16 @@ export default class Placement {
       this.setState('SHOWING_AD');
       if (typeof options.onShow === 'function') {
         options.onShow();
+        this.makeAPIRequest({
+          data: [{
+            type: 'adStarted',
+            adId: this.adId,
+            customParameters: this.userId ? [
+              { key: 'userId', value: this.userId },
+            ] : [],
+          }],
+          callback: (error, responses) => {},
+        });
       }
     } else {
       this.setState('DISMISSED');
