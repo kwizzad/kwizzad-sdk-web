@@ -1,4 +1,3 @@
-import compact from 'lodash/compact';
 import { t } from '../lib/i18n.jsx';
 import Reward, { enumerateRewardsAsText } from './reward.jsx';
 
@@ -26,7 +25,7 @@ export function transactionsFromJSON(json, confirmFunction) {
     return [];
   }
   const transactions = json.map(transaction => new Transaction(transaction, confirmFunction));
-  const rewards = compact(transactions.map(transaction => transaction.reward));
+  const rewards = transactions.map(transaction => transaction.reward).filter(Boolean);
   const summarizedRewardsText = rewards && enumerateRewardsAsText(rewards);
   transactions.summarizedRewardsText = summarizedRewardsText;
   transactions.summarizedRewardConfirmationText = rewards &&
