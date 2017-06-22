@@ -1,5 +1,5 @@
 {
-  "name": "kwizzad_sdk_web-2",
+  "name": "kwizzad-sdk-web",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -16,6 +16,7 @@
     "uuid": "^3.0.1",
     "webpack-bundle-analyzer": "^2.8.2"
   },
+  "main": "src/kwizzad.jsx",
   "homepage": "http://kwizzad.github.io/kwizzad-sdk-web",
   "devDependencies": {
     "autoprefixer": "7.1.0",
