@@ -3,6 +3,7 @@ import should from 'should';
 import Placement from './placement.jsx';
 import Transaction from './transaction.jsx';
 import Reward from './reward.jsx';
+import omit from 'lodash/omit';
 
 const mockedRewards = [
   { type: 'call2ActionStarted', amount: 3, maxAmount: 5, currency: 'spears' },
@@ -127,7 +128,7 @@ describe('Placement', () => {
       data.type.should.equal('adRequest');
       data.placementId.should.equal('tvsa');
       data.deviceInformation.should.match(/AppleWebKit\/.*/);
-      data.userData.should.eql({
+      omit(data.userData, 'userAgent').should.eql({
         apiVersion: '1.0',
         PlatformType: 'Unknown',
         sdkType: 'Web',
@@ -136,8 +137,8 @@ describe('Placement', () => {
         userName: 'Stefanie Müller',
         sdkVersion: '1.2.3',
         gender: 'FEMALE',
-        userAgent: 'Node.js (darwin; U; rv:v6.5.0) AppleWebKit/537.36 (KHTML, like Gecko)',
       });
+      data.userData.userAgent.should.match(/AppleWebKit\//),
       requests[0].callback.should.be.an.instanceOf(Function);
     });
 
