@@ -35,7 +35,7 @@ function operatingSystemFromUserAgent() {
     return 'Windows';
   } else if (ua.match(/Windows/)) {
     return 'Android';
-  } else if (ua.match(/iOS/)) {
+  } else if (ua.match(/iPhone/)) {
     return 'iOS';
   } else if (ua.match(/Macintosh/)) {
     return 'Macintosh';
