@@ -4,26 +4,45 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="theme-color" content="#000000">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400" rel="stylesheet">
     <link rel="stylesheet" href="index.css">
 
     <title>Kwizzad Web SDK Demo</title>
+  </head>
+  <body>
+    <header>
+      <h1>Kwizzad Web SDK Demo</h1>
+      <a href='https://kwizzad.com/'><img id='kwizzad-logo' src='icons/icon-512.png'></a>
+    </header>
 
-    <script>
-      // This function is called back by Kwizzad as soon as it is loaded completely.
+    <noscript>
+      <div>You need to enable JavaScript to run this app.</div>
+    </noscript>
+
+    <!-- Kwizzad uses this button to display a clickable ad.
+         Move this button into the right place in your app. -->
+    <button id='kwizzad-button' data-kwizzad-button disabled>
+      Initializing…
+    </button>
+
+    <!-- Adapt and include this Javascript snippet in your app. -->
+    <script data-kwizzad-snippet>
+      // Kwizzad calls this function as soon as the library is loaded.
       window.onKwizzadLoaded = function(Kwizzad) {
         var lastShowAdFunction = null;
         var button = document.getElementById('kwizzad-button');
 
         // Request and preload an ad. If you want your page to become responsive faster, you can
-        // choose to call `render`/`requestAd` later, when your page's main content is loaded
-        // completely.
+        // choose to call `render`/`requestAd` later, when the page's main content has finished
+        // loading.
         var kwizzad = new Kwizzad({
-          apiKey: 'b81e71a86cf1314d249791138d642e6c4bd08240f21dd31811dc873df5d7469d',
-          placementId: 'web_sdk_test_en',
+          // Replace this API key with the one you got from the Kwizzad publisher support team.
+          apiKey: 'b7220655bd54399edac9d9c6962f521d7c1cfed0f168e908a37ce4b2b6c7bcd2',
+          baseUrl: 'http://labs.tvsmiles.tv/api/sdk/',
+          // Replace this placement name with the one you got from the Kwizzad publisher support team.
+          placementId: 'tvsa',
         }).render().requestAd({
           // By supplying user data, your users can get better targeted ads. Each attribute is optional.
           user: {
@@ -44,12 +63,12 @@
             // - `adMetaInfo.potentialRewards`: an array of reward objects that the user can earn.
             // - `adMetaInfo.maximalReward`: a reward object representing the maximal reward
             //   the user can get from this campaign.
-            // - `adMetaInfo.incentiveText`: A short text that motivates the user to play the
-            //   campaign.
+            // - `adMetaInfo.incentiveText`: A short text that motivates the user to play.
             // - `adMetaInfo.squaredThumbnailUrl(100)`: returns a squared thumbnail URL with an
             //   image that fits the campaign's topic/brand.
             // - `adMetaInfo.ad.headline`: A short headline that describes the campaign.
 
+            // This is an example – you can customize the ad button to match your app design.
             button.innerHTML =
               "<div id='kwizzad-flex-columns'>" +
                 "<img id='kwizzad-ad-image' src=" + adMetaInfo.squaredThumbnailUrl(100) + ">" +
@@ -62,6 +81,7 @@
               "<div id='kwizzad-teaser'>" + adMetaInfo.ad.teaser + "</div>";
 
             button.disabled = false;
+
             if (lastShowAdFunction) {
               button.removeEventListener('click', lastShowAdFunction);
             }
@@ -71,7 +91,6 @@
 
           // Called back when the user played the campaign or dismissed the ad.
           onAdDismissed: function() {
-            console.log('Kwizzad was dismissed.');
             button.innerHTML = 'Waiting for next quiz...';
             button.disabled = true;
           },
@@ -123,20 +142,6 @@
           }
         });
       };
-      </script>
-  </head>
-  <body>
-    <header>
-      <h1>Kwizzad Web SDK Demo</h1>
-      <a href='https://kwizzad.com/'><img id='kwizzad-logo' src='icons/icon-512.png'></a>
-    </header>
-
-    <noscript>
-      <div>You need to enable JavaScript to run this app.</div>
-    </noscript>
-
-    <button id='kwizzad-button' disabled>
-      Initializing…
-    </button>
+    </script>
   </body>
 </html>

@@ -26,6 +26,7 @@ If you want to try more advanced changes with the SDK, run `npm install; npm sta
 command line and open `http://localhost:8080/` in a web browser, which opens an example web app
 that integrates Kwizzad.
 
+
 ### Requesting and presenting ads
 
 We recommend you request an ad from Kwizzad right when your page has finished loading.
@@ -49,6 +50,8 @@ single pending reward. As soon as your app confirms a transaction, its reward wi
 Transactions work like an inbox, so you might transactions again (asynchronously) until you confirm
 them.
 
+After the user dismisses the ad, the SDK requests a new ad automatically.
+
 
 ### Example implementation
 
@@ -69,6 +72,8 @@ the CSS for this.
 
 Kwizzad lets you customize when an ad is actually opened. The handling works like this:
 
+<!-- The build process inserts the following snippet automatically from index.html. -->
+<!-- KWIZZAD SNIPPET START -->
 ```javascript
 // Kwizzad calls this function as soon as the library is loaded.
 window.onKwizzadLoaded = function(Kwizzad) {
@@ -78,7 +83,9 @@ window.onKwizzadLoaded = function(Kwizzad) {
   // Request and preload an ad. If you want your page to become responsive faster, you can
   // choose to call `render`/`requestAd` later, when your page's main content has finished loading.
   var kwizzad = new Kwizzad({
+    // Replace this API key with the one you got from the Kwizzad publisher support team.
     apiKey: 'b81e71a86cf1314d249791138d642e6c4bd08240f21dd31811dc873df5d7469d',
+    // Replace this placement name with the one you got from the Kwizzad publisher support team.
     placementId: 'web_sdk_test',
   }).render().requestAd({
     // By supplying user data, your users can get better targeted ads. Each attribute is optional.
@@ -127,6 +134,23 @@ window.onKwizzadLoaded = function(Kwizzad) {
       if (confirm(openTransactions.summarizedRewardConfirmationText)) {
         openTransactions.confirmAll();
       }
+
+      // Optional alternative flow for showing/confirming each single transaction:
+
+      // openTransactions.forEach(function (transaction) {
+      //   // Available here:
+      //   // - transaction.rewardConfirmationText()
+      //   // - transaction.reward.amount
+      //   // - transaction.reward.maxAmount
+      //   // - transaction.reward.currency
+      //   // - transaction.reward.type
+      //   // - transaction.reward.valueDescription
+      //   // - transaction.reward.debugValueDescription
+      //   if (confirm(transaction.rewardConfirmationText())) {
+      //     Removes the transaction from the inbox and triggers payout
+      //     transaction.confirm();
+      //   }
+      // });
     },
 
     // Called back if no ad is available for your request. Note that Kwizzad
@@ -138,6 +162,7 @@ window.onKwizzadLoaded = function(Kwizzad) {
   });
 };
 ```
+<!-- KWIZZAD SNIPPET END -->
 
 
 ## For developers: contribution guidelines
@@ -146,11 +171,13 @@ window.onKwizzadLoaded = function(Kwizzad) {
 * Push new code to the develop branch or make a pull request when it's stable.
 
 
+
 ### How do I get set up as a contributor?
 
   - Check out
-  - Run `npm install; npm start`
-  - Open `http://localhost:8080/`
+  - Install [yarn](https://yarnpkg.com)
+  - Run `yarn; yarn start`
+  - Follow the instructions on screen
 
 
 ### Directory structure
@@ -171,8 +198,6 @@ built by our Jenkins server. After a while, your build will be online.
 
 ### Manual deployment (…or how to set up builds on Jenkins)
 
-* Create `deploy/develop.js` (look at `deploy/example.js` for an example what content to put in).
-  For each environment, you must create a settings file in `deploy/`.
-* Make a build with `npm run build`
+* Make a build with `yarn build`
 * Upload to s3 with `node s3-upload.js -d develop` (`develop`).
 * This also invalidates the AWS CloudFront cache. It can take 10 or more minutes until the cache is delivering all new files, so when testing, ensure you are actually looking at the newest version.
