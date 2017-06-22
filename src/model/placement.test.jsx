@@ -138,7 +138,7 @@ describe('Placement', () => {
         sdkVersion: '1.2.3',
         gender: 'FEMALE',
       });
-      data.userData.userAgent.should.match(/AppleWebKit\//),
+      data.userData.userAgent.should.match(/AppleWebKit\//);
       requests[0].callback.should.be.an.instanceOf(Function);
     });
 
