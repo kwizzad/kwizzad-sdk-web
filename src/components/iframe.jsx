@@ -1,6 +1,5 @@
 import React from 'react';
-import pick from 'lodash/pick';
-
+import PropTypes from 'prop-types';
 
 function addOpenTarget(url) {
   return `${url}&openTarget=_blank`;
@@ -9,6 +8,7 @@ function addOpenTarget(url) {
 
 export default function Iframe(props) {
   return (<iframe
+    title="Kwizzad Komet"
     src={addOpenTarget(props.src)}
     className="kwizzad-iframe"
     allowFullScreen
@@ -20,5 +20,5 @@ export default function Iframe(props) {
 
 
 Iframe.propTypes = {
-  queryParams: React.PropTypes.object.isRequired,
+  queryParams: PropTypes.object.isRequired,
 };

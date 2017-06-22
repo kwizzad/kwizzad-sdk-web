@@ -5,12 +5,12 @@ import pick from 'lodash/pick';
 import ReactDOM from 'react-dom';
 import Placement from './model/placement.jsx';
 import KwizzadDialog from './components/kwizzad-dialog.jsx';
-import { setLocale } from './lib/i18n.jsx';
 
 import './kwizzad.css';
 
+
 export default class Kwizzad {
-  static PACKAGE_VERSION = PACKAGE_VERSION;
+  static PACKAGE_VERSION = typeof PACKAGE_VERSION === 'undefined' ? '0.0.0' : PACKAGE_VERSION;
 
   constructor(options) {
     this.options = options;
@@ -19,10 +19,6 @@ export default class Kwizzad {
       'apiKey',
       'baseUrl',
     ));
-  }
-
-  setLocale(locale) {
-    setLocale(locale);
   }
 
   render() {
@@ -64,7 +60,7 @@ export default class Kwizzad {
     if (!this.dialog) {
       throw new Error('Please call render() before calling requestAd().');
     }
-    this.dialog.requestAd(options);
+    this.dialog.requestAd(Object.assign({}, options, { sdkVersion: PACKAGE_VERSION }));
   }
 }
 

@@ -1,6 +1,5 @@
 // @flow
 
-/* globals PACKAGE_VERSION */
 import uniq from 'lodash/uniq';
 import requestJSON from '../lib/request.jsx';
 import defaults from '../lib/defaults.jsx';
@@ -45,7 +44,7 @@ function operatingSystemFromUserAgent() {
   } else if (ua.match(/Linux/)) {
     return 'Linux';
   }
-  return 'Unkwown';
+  return 'Unknown';
 }
 
 function adMetaInfoFromResponse(response) {
@@ -135,6 +134,10 @@ export default class Placement {
       options.onAdLoading(this);
     }
 
+    if (typeof options.sdkVersion === 'undefined') {
+      throw new Error('SDK version must be defined.');
+    }
+
     this.lastAdRequestOptions = options;
 
     this.userId = user && user.id;
@@ -154,7 +157,7 @@ export default class Placement {
           sdkType: 'Web',
           userId: user && user.id,
           userName: user && user.name,
-          sdkVersion: PACKAGE_VERSION,
+          sdkVersion: options.sdkVersion,
           userAgent: navigator.userAgent,
           gender: user && user.gender && user.gender.toUpperCase(),
           facebookUserId: user && user.facebookUserId,

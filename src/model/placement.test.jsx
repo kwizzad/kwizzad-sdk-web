@@ -1,4 +1,4 @@
-import expect from 'expect';
+// import expect from 'expect';
 import should from 'should';
 import Placement from './placement.jsx';
 import Transaction from './transaction.jsx';
@@ -6,10 +6,19 @@ import Reward from './reward.jsx';
 
 const mockedRewards = [
   { type: 'call2ActionStarted', amount: 3, maxAmount: 5, currency: 'spears' },
+  // the next reward should be added to previous reward in incentive text because currency is the same
+  { type: 'callback', amount: 3, maxAmount: 5, currency: 'spears' },
   { type: 'callback', amount: 10, maxAmount: 20, currency: 'flintstones' },
 ].map(r => new Reward(r));
 
-const incentiveText = 'Earn up to 5 spears and up to 20 flintstones with a quiz!';
+const maximalReward = new Reward({ currency: 'spears', amount: 6, maxAmount: 10 });
+
+const incentiveText = 'Earn up to 10 spears and up to 20 flintstones with a quiz';
+const ad = {
+  headline: 'War of Clans',
+  teaser: 'Welcome to the ruthless world of Vikings!',
+  brand: 'War of Clans',
+};
 
 const mockedAdResponse = {
   adType: 'adFullscreen',
@@ -20,6 +29,17 @@ const mockedAdResponse = {
   placementId: 'tvsa',
   type: 'adResponse',
   adId: 'xyz',
+  ad: ad,
+  images: [
+    {
+      type: 'header',
+      filename: 'abc.jpg',
+      url: 'http://images.tvsapp.info/campaigns/abc.300x0-hdpi-normal.jpg',
+      urlTemplate: 'http://images.tvsapp.info/campaigns/abc.{{width}}x{{height}}-hdpi-normal.jpg',
+      width: 300,
+      height: 300,
+    }
+  ],
 };
 
 const mockedOpenTransactions = [
@@ -57,6 +77,7 @@ const requestOptions = {
     name: 'Stefanie Müller',
     facebookUserId: '777',
   },
+  sdkVersion: '1.2.3',
 };
 
 describe('Placement', () => {
@@ -105,15 +126,17 @@ describe('Placement', () => {
       const data = requests[0].data[0];
       data.type.should.equal('adRequest');
       data.placementId.should.equal('tvsa');
-      data.deviceInformation.should.match(/Mozilla\/.*/);
+      data.deviceInformation.should.match(/AppleWebKit\/.*/);
       data.userData.should.eql({
         apiVersion: '1.0',
-        PlatformType: 'Web',
+        PlatformType: 'Unknown',
+        sdkType: 'Web',
         userId: '12345',
         facebookUserId: '777',
         userName: 'Stefanie Müller',
-        sdkVersion: '0.7.2',
+        sdkVersion: '1.2.3',
         gender: 'FEMALE',
+        userAgent: 'Node.js (darwin; U; rv:v6.5.0) AppleWebKit/537.36 (KHTML, like Gecko)',
       });
       requests[0].callback.should.be.an.instanceOf(Function);
     });
@@ -277,17 +300,34 @@ describe('Placement', () => {
           called.should.equal(true);
         });
 
-        it('hands you over potential rewards + incentive text', () => {
+        it('hands you over ad meta information', () => {
           const placement = new Placement(options);
-          let rewards;
+
+          let receivedAdMetaInfo;
+
           const opts = Object.assign({
-            onAdAvailable: (showAd, potentialRewards) => { rewards = potentialRewards; },
+            onAdAvailable: (showAd, adMetaInfo) => { receivedAdMetaInfo = adMetaInfo; },
           }, requestOptions);
+
           placement.requestAd(opts);
           receiveResponses();
+
           const expectedRewards = [].concat(mockedRewards);
-          expectedRewards.incentiveText = incentiveText;
-          rewards.should.eql(expectedRewards);
+          receivedAdMetaInfo.potentialRewards.should.eql(expectedRewards);
+          receivedAdMetaInfo.incentiveText.should.eql(incentiveText);
+          receivedAdMetaInfo.maximalReward.should.eql(maximalReward);
+          receivedAdMetaInfo.ad.should.eql(ad);
+          receivedAdMetaInfo.squaredThumbnailUrl(100).should.eql('http://images.tvsapp.info/campaigns/abc.100x0-hdpi-normal.jpg');
+
+          // - `adMetaInfo.potentialRewards`: an array of reward objects that the user can earn.
+          // - `adMetaInfo.maximalReward`: a reward object representing the maximal reward
+          //   the user can get from this campaign.
+          // - `adMetaInfo.incentiveText`: A short text that motivates the user to play the
+          //   campaign.
+          // - `adMetaInfo.squaredThumbnailUrl(100)`: returns a squared thumbnail URL with an
+          //   image that fits the campaign's topic/brand.
+          // - `adMetaInfo.ad.headline`: A short headline that describes the campaign.
+
         });
 
         describe('showAd function parameter', () => {

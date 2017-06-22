@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import parseQueryParams from '../lib/query-params.jsx';
 import ModalDialog from './modal-dialog.jsx';
 import Iframe from './iframe.jsx';
+import PropTypes from 'prop-types';
 
 import './kwizzad-dialog.css';
 
@@ -15,7 +16,7 @@ export default class KwizzadDialog extends Component {
     // optionally be given behind a hash character (#), e.g. like this:
     // `http://host/page.html#/path/goes/here?foo=bar`
 
-    const pathRegexp = /^#?\/?([^\/]+)\/([^\/\?]+)/;
+    const pathRegexp = /^#?\/?([^/]+)\/([^/?]+)/;
     const { hash, pathname } = window.location;
     const match = hash ? hash.match(pathRegexp) : pathname.match(pathRegexp);
     const hashQueryParamsString = (hash && (hash.match(/\?.*$/) || [])[0]) || '';
@@ -28,7 +29,7 @@ export default class KwizzadDialog extends Component {
 
     if (match) {
       const [, resourceType, resourceId] = match;
-      this.state[resourceType] = resourceId;
+      this.setState({ [resourceType]: resourceId });
     }
   }
 
@@ -105,18 +106,18 @@ export default class KwizzadDialog extends Component {
 
 
 KwizzadDialog.propTypes = {
-  user: React.PropTypes.shape({
-    id: React.PropTypes.string.isRequired,
-    gender: React.PropTypes.string.isRequired,
-    name: React.PropTypes.string.isRequired,
-    facebookUserId: React.PropTypes.string.isRequired,
+  user: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    gender: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    facebookUserId: PropTypes.string.isRequired,
   }),
-  placement: React.PropTypes.shape({
-    requestAd: React.PropTypes.func.isRequired,
-    dismissAd: React.PropTypes.func.isRequired,
+  placement: PropTypes.shape({
+    requestAd: PropTypes.func.isRequired,
+    dismissAd: PropTypes.func.isRequired,
   }).isRequired,
-  apiKey: React.PropTypes.string.isRequired,
-  placementId: React.PropTypes.string.isRequired,
-  onShow: React.PropTypes.func,
-  onClose: React.PropTypes.func,
+  apiKey: PropTypes.string.isRequired,
+  placementId: PropTypes.string.isRequired,
+  onShow: PropTypes.func,
+  onClose: PropTypes.func,
 };

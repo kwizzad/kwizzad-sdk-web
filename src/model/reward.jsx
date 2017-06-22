@@ -9,7 +9,6 @@ export default class Reward {
   constructor(jsonData) {
     if (jsonData) {
       Object.assign(this, jsonData);
-      this.averageDurationToCallback = this.averageDurationToCallback * 1.3;
     }
   }
 
@@ -62,22 +61,23 @@ export function incentiveTextForRewards(rewards) {
   if (!rewards) {
     return null;
   }
-  const currencyCount = uniqueRewardCurrencies(rewards).length;
+  const summarizedRewards = summarize(rewards);
+  const currencyCount = uniqueRewardCurrencies(summarizedRewards).length;
   if (!currencyCount) {
     return null;
   }
   if (currencyCount === 1) {
-    const totalAmount = sum(rewards.map(reward => reward.amount));
-    const maxTotalAmount = sum(rewards.map(reward => reward.maxAmount || reward.amount));
-    const currency = rewards[0].currency;
+    const totalAmount = sum(summarizedRewards.map(reward => reward.amount));
+    const maxTotalAmount = sum(summarizedRewards.map(reward => reward.maxAmount || reward.amount));
+    const currency = summarizedRewards[0].currency;
     let potentialTotalReward;
-    if (maxTotalAmount > totalAmount || uniq(rewards.map(reward => reward.type).length > 1)) {
+    if (maxTotalAmount > totalAmount || uniq(summarizedRewards.map(reward => reward.type).length > 1)) {
       potentialTotalReward = t('reward.withLimit', { reward: `${maxTotalAmount} ${currency}` });
     } else {
       potentialTotalReward = `${totalAmount} ${currency}`;
     }
     return t('reward.incentiveText', { potentialTotalReward });
   }
-  const potentialTotalReward = enumerateAsText(rewards.map(reward => reward.valueDescription()));
+  const potentialTotalReward = enumerateAsText(summarizedRewards.map(reward => reward.valueDescription()));
   return t('reward.incentiveText', { potentialTotalReward });
 }

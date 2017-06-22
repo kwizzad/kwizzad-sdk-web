@@ -1,2 +1,2 @@
-import Kwizzad from './kwizzad';
+import './kwizzad';
 

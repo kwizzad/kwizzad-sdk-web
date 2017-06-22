@@ -1,6 +1,7 @@
 /* eslint-disable max-len */
 
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { default as p } from '../lib/prefix-css-classes.jsx';
 import './modal-dialog.css';
 
@@ -37,11 +38,11 @@ export default class ModalDialog extends Component {
 // Validate all props that are used inside the component to warn early if they're not supplied
 // correctly
 ModalDialog.propTypes = {
-  onClose: React.PropTypes.func.isRequired,
-  isVisible: React.PropTypes.bool.isRequired,
-  className: React.PropTypes.string.isRequired,
-  isKeyboardShown: React.PropTypes.bool,
-  isRenderedIfInvisible: React.PropTypes.bool,
-  closeButtonElement: React.PropTypes.element,
-  children: React.PropTypes.node,
+  onClose: PropTypes.func.isRequired,
+  isVisible: PropTypes.bool.isRequired,
+  className: PropTypes.string.isRequired,
+  isKeyboardShown: PropTypes.bool,
+  isRenderedIfInvisible: PropTypes.bool,
+  closeButtonElement: PropTypes.element,
+  children: PropTypes.node,
 };

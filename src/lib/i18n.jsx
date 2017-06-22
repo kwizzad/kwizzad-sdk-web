@@ -1,4 +1,5 @@
 /* eslint max-len:0 */
+
 import get from 'lodash/get';
 import uniq from 'lodash/uniq';
 import flatten from 'lodash/flatten';
@@ -32,7 +33,7 @@ export const translations = {
   },
 };
 
-let customLocale = null;
+
 const defaultLocale = 'en';
 const supportedLocales = Object.keys(translations);
 
@@ -90,12 +91,6 @@ export function translate(stringName, options = {}) {
     return options[key] || keyWithCurlyBraces;
   });
   return string;
-}
-
-
-export function setLocale(locale) {
-  customLocale = locale;
-  console.log('Locale set to', locale);
 }
 
 
