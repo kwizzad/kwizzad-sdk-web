@@ -2,30 +2,42 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Kwizzad Web SDK Demo</title>
     <meta name="theme-color" content="#000000">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400" rel="stylesheet">
-    <link rel="stylesheet" href="index.css">
 
-    <title>Kwizzad Web SDK Demo</title>
+    <!--
+      index.css contains styles relevant for this example application. You don't need it in your
+      integration.
+    -->
+    <link rel="stylesheet" href="index.css">
   </head>
+
   <body>
     <header>
       <h1>Kwizzad Web SDK Demo</h1>
       <a href='https://kwizzad.com/'><img id='kwizzad-logo' src='icons/icon-512.png'></a>
     </header>
 
+
     <noscript>
       <div>You need to enable JavaScript to run this app.</div>
     </noscript>
 
+    <!-- START of Kwizzad's snippet -->
+
+    <!--
+      Optional: If you want to reuse the button look-and-feel from the example app, you can copy &
+      paste kwizzad-button.css into your project.
+    -->
+    <link rel="stylesheet" href="kwizzad-button.css">
+
     <!-- Kwizzad uses this button to display a clickable ad.
          Move this button into the right place in your app. -->
-    <button id='kwizzad-button' data-kwizzad-button disabled>
-      Initializing…
-    </button>
+    <button id='kwizzad-button' data-kwizzad-button disabled>Initializing…</button>
 
     <!-- Adapt and include this Javascript snippet in your app. -->
     <script data-kwizzad-snippet>
@@ -39,17 +51,16 @@
         // loading.
         var kwizzad = new Kwizzad({
           // Replace this API key with the one you got from the Kwizzad publisher support team.
-          apiKey: 'b7220655bd54399edac9d9c6962f521d7c1cfed0f168e908a37ce4b2b6c7bcd2',
-          baseUrl: 'http://labs.tvsmiles.tv/api/sdk/',
+          apiKey: 'b81e71a86cf1314d249791138d642e6c4bd08240f21dd31811dc873df5d7469d',
           // Replace this placement name with the one you got from the Kwizzad publisher support team.
-          placementId: 'tvsa',
+          placementId: 'web_sdk_test_de',
         }).render().requestAd({
           // By supplying user data, your users can get better targeted ads. Each attribute is optional.
           user: {
-            id: '1337',              // unique ID that identifies the user inside your app
-            gender: 'female',        // 'male', 'female' or null
-            name: 'Stefanie Müller', // user realname inside your app, if existing
-            facebookUserId: '123'    // if your users log in over Facebook
+            // id: '1337',              // unique ID that identifies the user inside your app
+            // gender: 'female',        // 'male', 'female' or null
+            // name: 'Stefanie Müller', // user realname inside your app, if existing
+            // facebookUserId: '123'    // if your users log in over Facebook
           },
 
           onAdLoading: function() {
@@ -143,5 +154,11 @@
         });
       };
     </script>
+
+    <!--
+      The following script contains Kwizzad's SDK logic.
+    -->
+
+    <!-- END of Kwizzad's snippet -->
   </body>
 </html>
