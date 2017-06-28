@@ -1,6 +1,6 @@
 {
   "name": "kwizzad-sdk-web",
-  "version": "0.1.32-51",
+  "version": "0.1.33-52",
   "private": true,
   "dependencies": {
     "eslint-import-resolver-webpack": "^0.8.1",
