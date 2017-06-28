@@ -2,11 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Kwizzad Web SDK Demo</title>
+    <title>Kwizzad Web SDK Integration</title>
     <meta name="theme-color" content="#000000">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="manifest" href="/kwizzad-sdk-web/manifest.json">
-    <link rel="shortcut icon" href="/kwizzad-sdk-web/favicon.ico">
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
+    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400" rel="stylesheet">
 
     <!--
@@ -14,11 +14,11 @@
       integration.
     -->
     <link rel="stylesheet" href="index.css">
-  <link href="/kwizzad-sdk-web/kwizzad-0.1.3-54.main.204fe8a5.css" rel="stylesheet"></head>
+  </head>
 
   <body>
     <header>
-      <h1>Kwizzad Web SDK Demo</h1>
+      <h1>Kwizzad Web SDK Widget code</h1>
       <a href='https://kwizzad.com/'><img id='kwizzad-logo' src='icons/icon-512.png'></a>
     </header>
 
@@ -28,6 +28,8 @@
     </noscript>
 
     <!-- START of Kwizzad's snippet -->
+
+    <CSSLinkTag>
 
     <!--
       Optional: If you want to reuse the button look-and-feel from the example app, you can copy &
@@ -71,6 +73,7 @@
           // Kwizzad SDK calls this back when there is an ad for your request.
           onAdAvailable: function(showAd, adMetaInfo) {
             // Available here:
+
             // - `adMetaInfo.potentialRewards`: an array of reward objects that the user can earn.
             // - `adMetaInfo.maximalReward`: a reward object representing the maximal reward
             //   the user can get from this campaign.
@@ -159,6 +162,8 @@
       The following script contains Kwizzad's SDK logic.
     -->
 
+    <JavaScriptTag>
+
     <!-- END of Kwizzad's snippet -->
-  <script type="text/javascript" src="/kwizzad-sdk-web/kwizzad-0.1.3-54.main.583579ce.js"></script></body>
+  </body>
 </html>
