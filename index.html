@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Kwizzad Web SDK Demo</title>
+    <meta name="theme-color" content="#000000">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="manifest" href="/kwizzad-sdk-web/manifest.json">
+    <link rel="shortcut icon" href="/kwizzad-sdk-web/favicon.ico">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400" rel="stylesheet">
+
+    <!--
+      index.css contains styles relevant for this example application. You don't need it in your
+      integration.
+    -->
+    <link rel="stylesheet" href="index.css">
+  <link href="/kwizzad-sdk-web/kwizzad-0.1.4-22.main.204fe8a5.css" rel="stylesheet"></head>
+
+  <body>
+    <header>
+      <h1>Kwizzad Web SDK Demo</h1>
+      <a href='https://kwizzad.com/'><img id='kwizzad-logo' src='icons/icon-512.png'></a>
+    </header>
+
+
+    <noscript>
+      <div>You need to enable JavaScript to run this app.</div>
+    </noscript>
+
+    <!-- START of Kwizzad's snippet -->
+
+    <!--
+      Optional: If you want to reuse the button look-and-feel from the example app, you can copy &
+      paste kwizzad-button.css into your project.
+    -->
+    <link rel="stylesheet" href="kwizzad-button.css">
+
+    <!-- Kwizzad uses this button to display a clickable ad.
+         Move this button into the right place in your app. -->
+    <button id='kwizzad-button' data-kwizzad-button disabled>Initializing…</button>
+
+    <!-- Adapt and include this Javascript snippet in your app. -->
+    <script data-kwizzad-snippet>
+      // Kwizzad calls this function as soon as the library is loaded.
+      window.onKwizzadLoaded = function(Kwizzad) {
+        var lastShowAdFunction = null;
+        var button = document.getElementById('kwizzad-button');
+
+        // Request and preload an ad. If you want your page to become responsive faster, you can
+        // choose to call `render`/`requestAd` later, when the page's main content has finished
+        // loading.
+        var kwizzad = new Kwizzad({
+          // Replace this API key with the one you got from the Kwizzad publisher support team.
+          apiKey: 'b81e71a86cf1314d249791138d642e6c4bd08240f21dd31811dc873df5d7469d',
+          // Replace this placement name with the one you got from the Kwizzad publisher support team.
+          placementId: 'web_sdk_test_de',
+        }).render().requestAd({
+          // By supplying user data, your users can get better targeted ads. Each attribute is optional.
+          user: {
+            // id: '1337',              // unique ID that identifies the user inside your app
+            // gender: 'female',        // 'male', 'female' or null
+            // name: 'Stefanie Müller', // user realname inside your app, if existing
+            // facebookUserId: '123'    // if your users log in over Facebook
+          },
+
+          onAdLoading: function() {
+            button.innerHTML = "Loading quiz…";
+            button.disabled = true;
+          },
+
+          // Kwizzad SDK calls this back when there is an ad for your request.
+          onAdAvailable: function(showAd, adMetaInfo) {
+            // Available here:
+            // - `adMetaInfo.potentialRewards`: an array of reward objects that the user can earn.
+            // - `adMetaInfo.maximalReward`: a reward object representing the maximal reward
+            //   the user can get from this campaign.
+            // - `adMetaInfo.incentiveText`: A short text that motivates the user to play.
+            // - `adMetaInfo.squaredThumbnailUrl(100)`: returns a squared thumbnail URL with an
+            //   image that fits the campaign's topic/brand.
+            // - `adMetaInfo.ad.headline`: A short headline that describes the campaign.
+
+            // This is an example – you can customize the ad button to match your app design.
+            button.innerHTML =
+              "<div id='kwizzad-flex-columns'>" +
+                "<img id='kwizzad-ad-image' src=" + adMetaInfo.squaredThumbnailUrl(100) + ">" +
+                "<div id='kwizzad-ad-content'>" +
+                  "<div id='kwizzad-headline'>" + adMetaInfo.ad.headline + "</div>" +
+                  "<div id='kwizzad-incentive-text'>" + adMetaInfo.incentiveText + "</div>" +
+                "</div>" +
+                "<div id='kwizzad-reward-amount-badge'>+" + adMetaInfo.maximalReward.amount + "</div>" +
+              "</div>" +
+              "<div id='kwizzad-teaser'>" + adMetaInfo.ad.teaser + "</div>";
+
+            button.disabled = false;
+
+            if (lastShowAdFunction) {
+              button.removeEventListener('click', lastShowAdFunction);
+            }
+            lastShowAdFunction = showAd;
+            button.addEventListener('click', lastShowAdFunction);
+          },
+
+          // Called back when the user played the campaign or dismissed the ad.
+          onAdDismissed: function() {
+            button.innerHTML = 'Waiting for next quiz...';
+            button.disabled = true;
+          },
+
+          // Called back with reward information that the user has to confirm.
+          onOpenTransactions: function(openTransactions) {
+            // Here you should show a rewarding UI that displays all pending transactions.
+
+            // Each transaction in `openTransactions` contains one or more reward objects.
+            // The server will send the same transactions again until your code confirms them by
+            // calling their `confirm` method, like an inbox.
+
+            // It's a good idea to show a summary of all open transactions so the user can confirm
+            // all at once, but it's up to you if you want to show a single notification for each
+            // transaction.
+
+            if (confirm(openTransactions.summarizedRewardConfirmationText)) {
+              openTransactions.confirmAll();
+            }
+
+            // Optional alternative flow for showing/confirming each single transaction:
+
+            // openTransactions.forEach(function (transaction) {
+            //   // Available here:
+            //   // - transaction.rewardConfirmationText()
+            //   // - transaction.reward.amount
+            //   // - transaction.reward.maxAmount
+            //   // - transaction.reward.currency
+            //   // - transaction.reward.type
+            //   // - transaction.reward.valueDescription
+            //   // - transaction.reward.debugValueDescription
+            //   if (confirm(transaction.rewardConfirmationText())) {
+            //     Removes the transaction from the inbox and triggers payout
+            //     transaction.confirm();
+            //   }
+            // });
+          },
+
+          // Called back if no ad is available for your request. Note that Kwizzad
+          // automatically retries to fetch ads in the background and calls `onAdAvailable` then.
+          onNoFill: function() {
+            button.innerHTML = 'No quiz available.';
+          },
+
+          // Called back if the request could not be sent or the server responded with an error.
+          onError: function(error) {
+            button.innerHTML = 'No quiz available.';
+            console.log('Kwizzad error:', error);
+          }
+        });
+      };
+    </script>
+
+    <!--
+      The following script contains Kwizzad's SDK logic.
+    -->
+
+    <!-- END of Kwizzad's snippet -->
+  <script type="text/javascript" src="/kwizzad-sdk-web/kwizzad-0.1.4-22.main.72643fa6.js"></script></body>
+</html>
