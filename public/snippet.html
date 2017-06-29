@@ -41,12 +41,17 @@
          Move this button into the right place in your app. -->
     <button id='kwizzad-button' data-kwizzad-button disabled>Initializing…</button>
 
+    <footer id='kwizzad-version'></footer>
+
     <!-- Adapt and include this Javascript snippet in your app. -->
     <script data-kwizzad-snippet>
       // Kwizzad calls this function as soon as the library is loaded.
       window.onKwizzadLoaded = function(Kwizzad) {
         var lastShowAdFunction = null;
         var button = document.getElementById('kwizzad-button');
+
+        var version = document.getElementById('kwizzad-version')
+        if (version) version.innerHTML = Kwizzad.PACKAGE_VERSION;
 
         // Request and preload an ad. If you want your page to become responsive faster, you can
         // choose to call `render`/`requestAd` later, when the page's main content has finished
