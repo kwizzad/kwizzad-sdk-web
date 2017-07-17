@@ -26,7 +26,7 @@ export function transactionsFromJSON(json, confirmFunction) {
   }
   const transactions = json.map(transaction => new Transaction(transaction, confirmFunction));
   const rewards = transactions.map(transaction => transaction.reward).filter(Boolean);
-  const summarizedRewardsText = rewards && enumerateRewardsAsText(rewards);
+  const summarizedRewardsText = rewards && rewards.length > 0 && enumerateRewardsAsText(rewards);
   transactions.summarizedRewardsText = summarizedRewardsText;
   transactions.summarizedRewardConfirmationText = rewards &&
     t('transaction.confirmationText', { oneOrMoreRewards: summarizedRewardsText });
