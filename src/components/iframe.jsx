@@ -6,10 +6,16 @@ function addOpenTarget(url) {
 }
 
 
+function replaceOverriddenKometUrl(url, baseUrl) {
+  if (!baseUrl) return url;
+  return url.replace(/(https)?:\/\/.*?\//, `${baseUrl}/`);
+}
+
+
 export default function Iframe(props) {
   return (<iframe
     title="Kwizzad Komet"
-    src={addOpenTarget(props.src)}
+    src={replaceOverriddenKometUrl(addOpenTarget(props.src), props.overriddenKometBaseUrl)}
     className="kwizzad-iframe"
     allowFullScreen
     frameBorder="0"
@@ -21,4 +27,5 @@ export default function Iframe(props) {
 
 Iframe.propTypes = {
   queryParams: PropTypes.object.isRequired,
+  overriddenKometBaseUrl: PropTypes.string,
 };
