@@ -76,6 +76,10 @@ export default class KwizzadDialog extends Component {
 
     const lastCloseFn = () => {
       this.setState({ isVisible: false });
+      // We have to set the src to null to ensure that possibly played media is stopped on closing.
+      // Setting the src to null directly would flicker when the quiz closing animation is running.
+      // 500ms is right after the close animation and looks smooth.
+      setTimeout(() => { this.setState({ src: null }); }, 500);
       this.props.placement.dismissAd();
       if (typeof this.onAdDismissed === 'function') {
         this.onAdDismissed();
