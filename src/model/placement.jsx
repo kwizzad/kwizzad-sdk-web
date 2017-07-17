@@ -114,7 +114,7 @@ export default class Placement {
   makeAPIRequest(options) {
     let requestFunction = this.options.requestFunction || requestJSON;
     const installId = this.options.installId || getInstallId();
-    const url = `${this.options.baseUrl.replace(/\/?/, '')}/${this.options.apiKey}/${installId}`;
+    const url = `${this.options.baseUrl.replace(/\/$/, '')}/${this.options.apiKey}/${installId}`;
     requestFunction(Object.assign({ url, method: 'POST' }, options));
   }
 
