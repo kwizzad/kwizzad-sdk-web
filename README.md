@@ -131,7 +131,12 @@ window.onKwizzadLoaded = function(Kwizzad) {
       // all at once, but it's up to you if you want to show a single notification for each
       // reward.
 
-      if (confirm(openTransactions.summarizedRewardConfirmationText)) {
+      // Note that the `window.confirm` call is just an example. You can display the reward
+      // confirmation in any way you want, for example as animations for each reward, or
+      // with a dialog UI that fits your app's look and feel. Just be sure that the user
+      // is actually informed about the reward.
+
+      if (window.confirm(openTransactions.summarizedRewardConfirmationText)) {
         openTransactions.confirmAll();
       }
 
