@@ -84,7 +84,7 @@ export default class KwizzadDialog extends Component {
     };
 
     lastCloseEventListener = e => {
-      if (e.data === 'kwizzad.call2Action') {
+      if (e.data === 'kwizzad.call2Action' || e.data === 'kwizzad.dismiss') {
         lastCloseFn();
       }
     };
