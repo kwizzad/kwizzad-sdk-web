@@ -8,7 +8,7 @@ function addOpenTarget(url) {
 
 function replaceOverriddenKometUrl(url, baseUrl) {
   if (!baseUrl) return url;
-  return url.replace(/(https)?:\/\/.*?\//, `${baseUrl}/`);
+  return url.replace(/(https?):\/\/.*?\//, `${baseUrl}/`);
 }
 
 

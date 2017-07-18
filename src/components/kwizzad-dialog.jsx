@@ -103,7 +103,7 @@ export default class KwizzadDialog extends Component {
       isVisible={Boolean(this.state.src) && this.state.isVisible}
       height={this.state.height}
     >
-      <Iframe {...this.state} />
+      <Iframe {...this.state} overriddenKometBaseUrl={this.props.overriddenKometBaseUrl} />
     </ModalDialog>);
   }
 }
@@ -124,4 +124,5 @@ KwizzadDialog.propTypes = {
   placementId: PropTypes.string.isRequired,
   onShow: PropTypes.func,
   onClose: PropTypes.func,
+  overriddenKometBaseUrl: PropTypes.string,
 };
