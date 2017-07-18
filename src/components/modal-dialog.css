@@ -38,6 +38,14 @@ button.kwizzad-close-dialog {
   box-shadow: 0 2px 5px rgba(0,0,0,0.2);
   z-index: 1000;
 }
+
+@media (max-width: 400px), (max-height: 400px) {
+  button.kwizzad-close-dialog {
+    right: 2px;
+    top: 2px;
+  }
+}
+
 button.kwizzad-close-dialog svg {
   position: absolute;
   top: 50%;
