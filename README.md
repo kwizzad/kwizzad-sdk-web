@@ -8,8 +8,8 @@ Have a look at [our demo website](https://kwizzad.github.io/kwizzad-sdk-web/) to
 
 ## For publishers: How to embed the SDK into your website
 
-- [Download our latest zip build](https://github.com/kwizzad/kwizzad-sdk-web/blob/gh-pages/kwizzad-demo.zip?raw=true) that contains everything to get
-  started. Simply extract it, and open `index.html`.
+- [Download our latest zip snippet build](https://github.com/kwizzad/kwizzad-sdk-web/releases/latest) that contains everything to get
+  started. Simply extract `kwizzad-sdk-[version-name]-html-snippet.zip`, and open `index.html`.
 - Get an API key and placement ID(s) from the Kwizzad publisher support team. The support team can
   also provide a test placement ID that always returns an ad for testing purposes.
 - Change `index.html` and `index.css` according to your needs. See the comments in the HTML for
