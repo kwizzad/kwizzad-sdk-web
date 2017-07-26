@@ -4,6 +4,7 @@ import uniq from 'lodash/uniq';
 import requestJSON from '../lib/request.jsx';
 import defaults from '../lib/defaults.jsx';
 import getInstallId from './install-id.jsx';
+import { getLanguageCode, getOverriddenLanguageCode } from '../lib/i18n';
 import Reward, { incentiveTextForRewards, summarize as summarizeRewards } from './reward.jsx';
 import { transactionsFromJSON } from './transaction.jsx';
 
@@ -142,15 +143,20 @@ export default class Placement {
 
     this.userId = user && user.id;
 
-    const language = navigator.language.slice(0, 2);
+    const languageCode = getLanguageCode();
+    const overriddenLanguageCode = getOverriddenLanguageCode()
+    let languages = uniq((navigator.languages || [languageCode]).map(l => l.slice(0, 2)))
+    if (overriddenLanguageCode) {
+      languages = uniq([overriddenLanguageCode].concat(navigator.languages || []));
+    }
 
     this.makeAPIRequest({
       data: [{
         type: 'adRequest',
         placementId: this.options.placementId,
         deviceInformation: navigator.userAgent,
-        language: language,
-        languages: uniq((navigator.languages || [language]).map(l => l.slice(0, 2))),
+        language: languageCode,
+        languages,
         userData: {
           apiVersion: '1.0',
           PlatformType: operatingSystemFromUserAgent(),

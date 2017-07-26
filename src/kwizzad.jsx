@@ -5,6 +5,7 @@ import pick from 'lodash/pick';
 import ReactDOM from 'react-dom';
 import Placement from './model/placement.jsx';
 import KwizzadDialog from './components/kwizzad-dialog.jsx';
+import { overrideLocale } from './lib/i18n';
 
 import './kwizzad.css';
 
@@ -12,9 +13,10 @@ import './kwizzad.css';
 export default class Kwizzad {
   static PACKAGE_VERSION = typeof PACKAGE_VERSION === 'undefined' ? '0.0.0' : PACKAGE_VERSION;
 
-  constructor(options) {
-    this.options = options;
-    this.options.placement = new Placement(pick(options,
+  constructor(props) {
+    this.props = props;
+    overrideLocale(props.locale);
+    this.props.placement = new Placement(pick(props,
       'placementId',
       'apiKey',
       'baseUrl',
@@ -28,7 +30,7 @@ export default class Kwizzad {
     this.containerElement.classList.add('kwizzad-container');
     bodyElement.appendChild(this.containerElement);
 
-    const props = this.options;
+    const props = this.props;
 
     const closeFn = () => {
       this.containerElement.classList.remove('kwizzad-container-show');

@@ -36,7 +36,19 @@ export const translations = {
 
 const defaultLocale = 'en';
 const supportedLocales = Object.keys(translations);
+let overriddenLocale = null;
 
+export function getOverriddenLanguageCode(): ?string {
+  return overriddenLocale ? overriddenLocale.slice(0, 2) : null;
+}
+
+export function getLanguageCode(): string {
+  return (overriddenLocale || navigator.language).slice(0, 2)
+}
+
+export function overrideLocale(locale: string): void {
+  overriddenLocale = locale;
+}
 
 function findLocaleWithCountry(localeWithoutCountry) {
   const regexp = new RegExp(`^${localeWithoutCountry}`);
@@ -61,9 +73,10 @@ function expandLocale(requestedLocale) {
 }
 
 function translatedStringWithPlaceholders(stringName) {
-  const localesToTry = [navigator.language]
+  const localesToTry = [overriddenLocale, navigator.language]
     .concat(navigator.languages || [])
-    .concat([defaultLocale]);
+    .concat([defaultLocale])
+    .filter(Boolean);
   const expandedLocalesToTry = uniq(flatten(localesToTry.map(expandLocale))).filter(Boolean);
 
   for (const locale of expandedLocalesToTry) {
