@@ -9,6 +9,12 @@ import { overrideLocale } from './lib/i18n';
 
 import './kwizzad.css';
 
+function preventZoomTouchHandler(event: TouchEvent) {
+  event = event.originalEvent || event;
+  if (event.scale !== 1) {
+    event.preventDefault();
+  }
+}
 
 export default class Kwizzad {
   static PACKAGE_VERSION = typeof PACKAGE_VERSION === 'undefined' ? '0.0.0' : PACKAGE_VERSION;
@@ -37,6 +43,7 @@ export default class Kwizzad {
       setTimeout(() => {
         this.containerElement.classList.remove('kwizzad-container-visible');
       }, 1000);
+      document.removeEventListener('touchmove', preventZoomTouchHandler);
     };
 
     ReactDOM.render(
@@ -48,6 +55,7 @@ export default class Kwizzad {
         onShow={() => {
           this.containerElement.classList.add('kwizzad-container-visible');
           setTimeout(() => this.containerElement.classList.add('kwizzad-container-show'), 200);
+          document.addEventListener('touchmove', preventZoomTouchHandler, false);
         }}
 
         onClose={closeFn}
