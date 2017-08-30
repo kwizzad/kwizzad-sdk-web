@@ -105,7 +105,7 @@
                   "<div id='kwizzad-headline'>" + adMetaInfo.ad.headline + "</div>" +
                   "<div id='kwizzad-incentive-text'>" + (adMetaInfo.incentiveText || '') + "</div>" +
                 "</div>" +
-                (amount ? "<div id='kwizzad-reward-amount-badge'>+" + amount + "</div>" : "<div></div>") +
+                (adMetaInfo.maximalReward ? "<div id='kwizzad-reward-amount-badge'> +" + adMetaInfo.maximalReward.amount + "</div>" : '<div></div>') +
               "</div>" +
               "<div id='kwizzad-teaser'>" + adMetaInfo.ad.teaser + "</div>";
 
