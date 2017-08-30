@@ -14,7 +14,7 @@
       integration.
     -->
     <link rel="stylesheet" href="index.css">
-  <link href="/kwizzad-sdk-web/kwizzad-0.2.0-7.main.8d3c146b.css" rel="stylesheet"></head>
+  <link href="/kwizzad-sdk-web/kwizzad-0.2.1-8.main.8d3c146b.css" rel="stylesheet"></head>
 
   <body>
     <header>
@@ -58,7 +58,7 @@
           // Replace this API key with the one you got from the Kwizzad publisher support team.
           apiKey: 'b81e71a86cf1314d249791138d642e6c4bd08240f21dd31811dc873df5d7469d',
           // Replace this placement name with the one you got from the Kwizzad publisher support team.
-          placementId: 'web_sdk_test_de',
+          placementId: 'web_sdk_test_en_non_incent',
         }).render().requestAd({
           // By supplying user data, your users can get better targeted ads. Each attribute is optional.
           user: {
@@ -92,7 +92,7 @@
                   "<div id='kwizzad-headline'>" + adMetaInfo.ad.headline + "</div>" +
                   "<div id='kwizzad-incentive-text'>" + adMetaInfo.incentiveText + "</div>" +
                 "</div>" +
-                "<div id='kwizzad-reward-amount-badge'>+" + adMetaInfo.maximalReward.amount + "</div>" +
+                (adMetaInfo.maximalReward ? "<div id='kwizzad-reward-amount-badge'> +" + adMetaInfo.maximalReward.amount + "</div>" : '') +
               "</div>" +
               "<div id='kwizzad-teaser'>" + adMetaInfo.ad.teaser + "</div>";
 
@@ -165,5 +165,5 @@
     -->
 
     <!-- END of Kwizzad's snippet -->
-  <script type="text/javascript" src="/kwizzad-sdk-web/kwizzad-0.2.0-7.main.eb416b0d.js"></script></body>
+  <script type="text/javascript" src="/kwizzad-sdk-web/kwizzad-0.2.1-8.main.bdcf87b4.js"></script></body>
 </html>
