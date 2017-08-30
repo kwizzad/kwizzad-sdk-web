@@ -96,14 +96,16 @@
             // - `adMetaInfo.ad.headline`: A short headline that describes the campaign.
 
             // This is an example – you can customize the ad button to match your app design.
+            var amount = adMetaInfo.maximalReward && adMetaInfo.maximalReward.amount;
+
             button.innerHTML =
               "<div id='kwizzad-flex-columns'>" +
                 "<img id='kwizzad-ad-image' src=" + adMetaInfo.squaredThumbnailUrl(100) + ">" +
                 "<div id='kwizzad-ad-content'>" +
                   "<div id='kwizzad-headline'>" + adMetaInfo.ad.headline + "</div>" +
-                  "<div id='kwizzad-incentive-text'>" + adMetaInfo.incentiveText + "</div>" +
+                  "<div id='kwizzad-incentive-text'>" + (adMetaInfo.incentiveText || '') + "</div>" +
                 "</div>" +
-                "<div id='kwizzad-reward-amount-badge'>+" + adMetaInfo.maximalReward.amount + "</div>" +
+                (amount ? "<div id='kwizzad-reward-amount-badge'>+" + amount + "</div>" : "<div></div>") +
               "</div>" +
               "<div id='kwizzad-teaser'>" + adMetaInfo.ad.teaser + "</div>";
 
