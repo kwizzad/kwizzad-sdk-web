@@ -18,7 +18,7 @@
   text-align: center;
   color: white;
   font-size: 16px;
-  margin-bottom: 150px;
+  margin-bottom: 150px !important;
 }
 
 #kwizzad-button:disabled {
@@ -127,7 +127,7 @@
 
 @media (orientation: portrait) and (max-width: 400px) {
   #kwizzad-button {
-    margin: -10px
+    margin: -10px;
   }
 
   #kwizzad-reward-amount-badge {

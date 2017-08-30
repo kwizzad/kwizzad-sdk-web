@@ -14,7 +14,7 @@
       integration.
     -->
     <link rel="stylesheet" href="index.css">
-  <link href="/kwizzad-sdk-web/kwizzad-0.2.1-8.main.8d3c146b.css" rel="stylesheet"></head>
+  <link href="/kwizzad-sdk-web/kwizzad-0.2.1-9.main.8d3c146b.css" rel="stylesheet"></head>
 
   <body>
     <header>
@@ -43,6 +43,15 @@
 
     <!-- Adapt and include this Javascript snippet in your app. -->
     <script data-kwizzad-snippet>
+      function parseQueryParams(search) {
+          const params = {};
+          search.slice(search.indexOf('?') + 1).split('&').forEach(hash => {
+              const [key, val] = hash.split('=');
+              params[key] = decodeURIComponent(val);
+          });
+          return params;
+      }
+
       // Kwizzad calls this function as soon as the library is loaded.
       window.onKwizzadLoaded = function(Kwizzad) {
         var lastShowAdFunction = null;
@@ -58,7 +67,9 @@
           // Replace this API key with the one you got from the Kwizzad publisher support team.
           apiKey: 'b81e71a86cf1314d249791138d642e6c4bd08240f21dd31811dc873df5d7469d',
           // Replace this placement name with the one you got from the Kwizzad publisher support team.
-          placementId: 'web_sdk_test_en_non_incent',
+          placementId: parseQueryParams(window.location.search).placement || 'web_sdk_test_de',
+          // overriddenKometBaseUrl: 'http://localhost:3001',
+          // locale: 'fr',
         }).render().requestAd({
           // By supplying user data, your users can get better targeted ads. Each attribute is optional.
           user: {
@@ -85,14 +96,16 @@
             // - `adMetaInfo.ad.headline`: A short headline that describes the campaign.
 
             // This is an example – you can customize the ad button to match your app design.
+            var amount = adMetaInfo.maximalReward && adMetaInfo.maximalReward.amount;
+
             button.innerHTML =
               "<div id='kwizzad-flex-columns'>" +
                 "<img id='kwizzad-ad-image' src=" + adMetaInfo.squaredThumbnailUrl(100) + ">" +
                 "<div id='kwizzad-ad-content'>" +
                   "<div id='kwizzad-headline'>" + adMetaInfo.ad.headline + "</div>" +
-                  "<div id='kwizzad-incentive-text'>" + adMetaInfo.incentiveText + "</div>" +
+                  "<div id='kwizzad-incentive-text'>" + (adMetaInfo.incentiveText || '') + "</div>" +
                 "</div>" +
-                (adMetaInfo.maximalReward ? "<div id='kwizzad-reward-amount-badge'> +" + adMetaInfo.maximalReward.amount + "</div>" : '') +
+                (adMetaInfo.maximalReward ? "<div id='kwizzad-reward-amount-badge'> +" + adMetaInfo.maximalReward.amount + "</div>" : '<div></div>') +
               "</div>" +
               "<div id='kwizzad-teaser'>" + adMetaInfo.ad.teaser + "</div>";
 
@@ -165,5 +178,5 @@
     -->
 
     <!-- END of Kwizzad's snippet -->
-  <script type="text/javascript" src="/kwizzad-sdk-web/kwizzad-0.2.1-8.main.bdcf87b4.js"></script></body>
+  <script type="text/javascript" src="/kwizzad-sdk-web/kwizzad-0.2.1-9.main.75d41dba.js"></script></body>
 </html>
