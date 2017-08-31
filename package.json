@@ -7,11 +7,12 @@
     "eslint-plugin-mocha": "^4.9.0",
     "lodash": "^4.17.4",
     "mixpanel-browser": "^2.11.1",
-    "preact": "^8.1.0",
+    "preact": "^8.2.5",
     "preact-compat": "^3.16.0",
     "prop-types": "^15.5.10",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
+    "react-scripts": "1.0.12",
     "uuid": "^3.0.1",
     "webpack-bundle-analyzer": "^2.8.2"
   },
