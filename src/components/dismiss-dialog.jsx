@@ -36,6 +36,7 @@ export default function DismissDialog(props: Props) {
     isRenderedIfInvisible
     isVisible={props.isVisible}
     height={props.height}
+    onClose={() => {}}
     >
     <header>{headerText}</header>
     <footer>

@@ -386,6 +386,7 @@ describe('Placement', () => {
     });
 
     it('sets no timeout if adDismissed event did not work', () => {
+      console.log('The following error is expected. Don\'t worry!');
       placement.dismissAd();
       requests[0].callback(new Error('some error'));
       should.equal(milliseconds, undefined);

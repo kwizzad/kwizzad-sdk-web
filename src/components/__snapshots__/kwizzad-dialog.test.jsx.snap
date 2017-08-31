@@ -1,48 +1,104 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`KwizzadDialog renders without problems 1`] = `
-<div
-  className="kwizzad-modal-dialog kwizzad-modal-dialog-iframe kwizzad-kwizzad-modal-dialog-hidden"
->
+<div>
   <div
-    className="kwizzad-modal-dialog-fullscreen-overlay"
-    onClick={[Function]}
-  />
-  <div
-    className="kwizzad-modal-dialog-inner kwizzad-"
+    className="kwizzad-modal-dialog kwizzad-modal-dialog-iframe kwizzad-kwizzad-modal-dialog-hidden"
   >
     <div
-      className="kwizzad-modal-dialog-content"
+      className="kwizzad-modal-dialog-fullscreen-overlay"
+      onClick={[Function]}
+    />
+    <div
+      className="kwizzad-modal-dialog-inner kwizzad-"
     >
-      <button
-        className="kwizzad-close-dialog"
-        onClick={[Function]}
+      <div
+        className="kwizzad-modal-dialog-content"
       >
-        <svg
-          height="0.5em"
-          version="1.1"
-          viewBox="168 231 31 31"
-          width="0.5em"
+        <button
+          className="kwizzad-close-dialog"
+          onClick={[Function]}
         >
-          <polygon
-            fill="#FFFFFF"
-            fillRule="evenodd"
-            id="×"
-            points="180.121094   246.582031 168.90625 235.296875 172.351562 231.816406     183.601562 243.066406   194.957031 231.816406 198.4375 235.191406   187.046875   246.582031 198.367188   257.902344 194.957031 261.277344   183.601562 250.027344   172.351562 261.207031   168.976562 257.832031"
-            stroke="none"
-          />
-        </svg>
-      </button>
-      <iframe
-        allowFullScreen={true}
-        className="kwizzad-iframe"
-        frameBorder="0"
-        marginHeight="0"
-        marginWidth="0"
-        src="undefined&openTarget=_blank"
-        title="Kwizzad Komet"
-      />
+          <svg
+            height="0.5em"
+            version="1.1"
+            viewBox="168 231 31 31"
+            width="0.5em"
+          >
+            <polygon
+              fill="#FFFFFF"
+              fillRule="evenodd"
+              id="×"
+              points="180.121094   246.582031 168.90625 235.296875 172.351562 231.816406     183.601562 243.066406   194.957031 231.816406 198.4375 235.191406   187.046875   246.582031 198.367188   257.902344 194.957031 261.277344   183.601562 250.027344   172.351562 261.207031   168.976562 257.832031"
+              stroke="none"
+            />
+          </svg>
+        </button>
+        <iframe
+          allowFullScreen={true}
+          className="kwizzad-iframe"
+          frameBorder="0"
+          marginHeight="0"
+          marginWidth="0"
+          src="undefined&openTarget=_blank"
+          title="Kwizzad Komet"
+        />
+      </div>
     </div>
   </div>
+  ,
+  <div
+    className="kwizzad-modal-dialog kwizzad-modal-dialog-dismiss-dialog kwizzad-kwizzad-modal-dialog-hidden"
+  >
+    <div
+      className="kwizzad-modal-dialog-fullscreen-overlay"
+      onClick={[Function]}
+    />
+    <div
+      className="kwizzad-modal-dialog-inner kwizzad-"
+    >
+      <div
+        className="kwizzad-modal-dialog-content"
+      >
+        <button
+          className="kwizzad-close-dialog"
+          onClick={[Function]}
+        >
+          <svg
+            height="0.5em"
+            version="1.1"
+            viewBox="168 231 31 31"
+            width="0.5em"
+          >
+            <polygon
+              fill="#FFFFFF"
+              fillRule="evenodd"
+              id="×"
+              points="180.121094   246.582031 168.90625 235.296875 172.351562 231.816406     183.601562 243.066406   194.957031 231.816406 198.4375 235.191406   187.046875   246.582031 198.367188   257.902344 194.957031 261.277344   183.601562 250.027344   172.351562 261.207031   168.976562 257.832031"
+              stroke="none"
+            />
+          </svg>
+        </button>
+        <header>
+          Are you sure you want to miss out on this offer?
+        </header>
+        <footer>
+          <button
+            className="kwizzad-button-negative"
+            onClick={[Function]}
+          >
+            Give up
+          </button>
+          <button
+            className="kwizzad-button-positive"
+            onClick={[Function]}
+          >
+            Continue and claim reward
+          </button>
+        </footer>
+      </div>
+    </div>
+  </div>
+  ,
 </div>
 `;
