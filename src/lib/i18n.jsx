@@ -45,6 +45,26 @@ export const translations = {
       resumeButton: 'Weitermachen und Belohnung erhalten',
     },
   },
+  fr: {
+    reward: {
+      withLimit: 'Jusqu‘à {reward}',
+      incentiveText: 'Gagne {potentialTotalReward} avec un quiz',
+    },
+    transaction: {
+      confirmationText: 'Félicitations, tu as gagné {oneOrMoreRewards} !',
+      confirmationTextUnspecified: 'Félicitations, tu as gagné une récompense !',
+    },
+    enum: {
+      two: '{first} et {second}',
+      moreThanTwo: '{commaSeparated}, et {last}',
+    },
+    dismissDialog: {
+      rewardUnspecifiedText: 'Es-tu sûr de vouloir quitter et manquer cette offre ?',
+      rewardSpecifiedText: 'Es-tu sûr de vouloir quitter et manquer {rewardName} ?',
+      dismissButton: 'Quitter et renoncer à la récompense',
+      resumeButton: 'Continuer et réclamer la récompense',
+    },
+  },
 };
 
 
