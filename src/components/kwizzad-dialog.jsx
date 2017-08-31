@@ -98,7 +98,6 @@ export default class KwizzadDialog extends Component {
     // Listen to message from child window
     window.addEventListener('message', lastCloseEventListener, false);
 
-    const rewardName = "[some reward name here]";
     const height = this.state.height;
 
     return <div>
