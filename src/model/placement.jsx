@@ -48,7 +48,20 @@ function operatingSystemFromUserAgent() {
   return 'Unknown';
 }
 
-function adMetaInfoFromResponse(response) {
+type Ad = {
+
+};
+
+export type AdMetaInfo = {
+  potentialRewards: ?Reward[],
+  incentiveText: ?string,
+  ad: Ad,
+  images: { url: ((number, number) => ?string) }[],
+  maximalReward: ?Reward,
+  squaredThumbnailUrl: ((width: number) => ?string),
+};
+
+function adMetaInfoFromResponse(response): AdMetaInfo {
   const potentialRewards = (response.rewards || []).map(reward => new Reward(reward));
   const incentiveText = incentiveTextForRewards(potentialRewards);
   const maximalReward = summarizeRewards(potentialRewards)[0];
@@ -291,6 +304,7 @@ export default class Placement {
     this.setState('AD_READY');
     if (typeof options.onAdAvailable === 'function') {
       const showAd = () => this.showAd(response, options);
+      this.adMetaInfo = adMetaInfoFromResponse(response);
       options.onAdAvailable(showAd, adMetaInfoFromResponse(response));
     }
   }

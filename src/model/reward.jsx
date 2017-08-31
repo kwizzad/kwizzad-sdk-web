@@ -57,7 +57,7 @@ export function enumerateRewardsAsText(rewards) {
 }
 
 
-export function incentiveTextForRewards(rewards) {
+export function potentialTotalRewardText(rewards) {
   if (!rewards) {
     return null;
   }
@@ -76,8 +76,15 @@ export function incentiveTextForRewards(rewards) {
     } else {
       potentialTotalReward = `${totalAmount} ${currency}`;
     }
-    return t('reward.incentiveText', { potentialTotalReward });
+    return potentialTotalReward;
   }
-  const potentialTotalReward = enumerateAsText(summarizedRewards.map(reward => reward.valueDescription()));
-  return t('reward.incentiveText', { potentialTotalReward });
+  return enumerateAsText(summarizedRewards.map(reward => reward.valueDescription()));
+}
+
+
+export function incentiveTextForRewards(rewards) {
+  if (!rewards) return null;
+  const text = potentialTotalRewardText(rewards);
+  if (!text) return null;
+  return t('reward.incentiveText', { potentialTotalReward: text });
 }

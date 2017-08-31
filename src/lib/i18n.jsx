@@ -12,10 +12,17 @@ export const translations = {
     },
     transaction: {
       confirmationText: 'Congratulations, you earned {oneOrMoreRewards}!',
+      confirmationTextUnspecified: 'Congratulations, you earned a reward!',
     },
     enum: {
       two: '{first} and {second}',
       moreThanTwo: '{commaSeparated}, and {last}',
+    },
+    dismissDialog: {
+      rewardUnspecifiedText: 'Are you sure you want to miss out on this offer?',
+      rewardSpecifiedText: 'Are you sure you want to miss out on {rewardName}?',
+      dismissButton: 'Give up',
+      resumeButton: 'Continue and claim reward',
     },
   },
   de: {
@@ -25,10 +32,17 @@ export const translations = {
     },
     transaction: {
       confirmationText: 'Herzlichen Glückwunsch zu {oneOrMoreRewards}!',
+      confirmationTextUnspecified: 'Deine Belohnung ist unterwegs!',
     },
     enum: {
       two: '{first} und {second}',
       moreThanTwo: '{commaSeparated} und {last}',
+    },
+    dismissDialog: {
+      rewardUnspecifiedText: 'Willst du dir das Angebot wirklich entgehen lassen?',
+      rewardSpecifiedText: 'Willst du die Aktion wirklich beenden? Du verpasst {rewardName}.',
+      dismissButton: 'Aufgeben',
+      resumeButton: 'Weitermachen und Belohnung erhalten',
     },
   },
 };

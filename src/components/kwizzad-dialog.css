@@ -1,3 +1,7 @@
+.kwizzad-blur {
+  filter: blur(10px);
+}
+
 .kwizzad-modal-dialog-iframe .kwizzad-modal-dialog-content {
   position: relative;
   width: 90%;

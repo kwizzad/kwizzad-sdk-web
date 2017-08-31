@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import parseQueryParams from '../lib/query-params.jsx';
-import ModalDialog from './modal-dialog.jsx';
-import Iframe from './iframe.jsx';
+import parseQueryParams from '../lib/query-params';
+import ModalDialog from './modal-dialog';
+import Iframe from './iframe';
+import DismissDialog from './dismiss-dialog';
 import PropTypes from 'prop-types';
 
 import './kwizzad-dialog.css';
@@ -25,6 +26,7 @@ export default class KwizzadDialog extends Component {
     this.state = {
       queryParams: parseQueryParams(queryParamsString),
       isVisible: false,
+      isDismissConfirmationVisible: false,
     };
 
     if (match) {
@@ -96,15 +98,32 @@ export default class KwizzadDialog extends Component {
     // Listen to message from child window
     window.addEventListener('message', lastCloseEventListener, false);
 
-    return (<ModalDialog
-      className="iframe"
-      isRenderedIfInvisible
-      onClose={lastCloseFn}
-      isVisible={Boolean(this.state.src) && this.state.isVisible}
-      height={this.state.height}
-    >
-      <Iframe {...this.state} overriddenKometBaseUrl={this.props.overriddenKometBaseUrl} />
-    </ModalDialog>);
+    const rewardName = "[some reward name here]";
+    const height = this.state.height;
+
+    return <div>
+      <ModalDialog
+        key="iframe"
+        className={`iframe ${this.state.isDismissConfirmationVisible ? 'blur' : ''}`}
+        isRenderedIfInvisible
+        onClose={() => this.setState({ isDismissConfirmationVisible : true })}
+        isVisible={Boolean(this.state.src) && this.state.isVisible}
+        height={height}
+      >
+        <Iframe {...this.state} overriddenKometBaseUrl={this.props.overriddenKometBaseUrl} />
+      </ModalDialog>,
+      <DismissDialog
+        key="dismiss-dialog"
+        height={height}
+        placement={this.props.placement}
+        isVisible={this.state.isDismissConfirmationVisible}
+        onResume={() => this.setState({ isDismissConfirmationVisible: false })}
+        onDismiss={() => {
+          this.setState({ isDismissConfirmationVisible: false });
+          lastCloseFn();
+        }}
+      />,
+    </div>;
   }
 }
 
